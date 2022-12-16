@@ -38,14 +38,15 @@ form?.addEventListener('formdata', (e: FormDataEvent) => {
     e.preventDefault();
     const formData = e.formData;
 
-    if (!ctx) throw Error('Canvas context (ctx) is not defined');
-
     Array(numberOfPlayers).fill(0).forEach((_player, idx) => {
         players.push(new Player({
-            ctx,
             id: formData.get(`player[${idx}][name]`) as string,
             color: formData.get(`player[${idx}][color]`) as string,
             startCounter: 40,
+            startPosition: {
+                x: Math.random() * (ctx!.canvas.width - 30) - 15,
+                y: Math.random() * (ctx!.canvas.height - 30) - 15,
+            },
             controls: {
                 left: formData.get(`player[${idx}][controls][left]`) as string,
                 right: formData.get(`player[${idx}][controls][right]`) as string,

@@ -1,5 +1,6 @@
 @import 'https://unpkg.com/open-props/src/index.css';
 @import 'https://unpkg.com/open-props/src/extra/normalize.css';
+@import "https://unpkg.com/open-props/src/extra/buttons.css";
 
 html,
 body {
@@ -46,4 +47,34 @@ aside {
     box-shadow: var(--shadow-3);
     border: inset 1px solid var(--gray-7);
     padding: var(--size-1);
+}
+
+.input-wrapper {
+    display: grid;
+}
+
+form {
+    display: grid;
+    gap: var(--size-2);
+}
+
+.player-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: end;
+    gap: var(--size-3);
+    padding: var(--size-3);
+    background-color: var(--surface-2);
+
+    /* & > * {
+        min-inline-size: 0;
+    } */
+
+    & [type="color"] {
+        /* block-size: 100%; */
+    }
+
+    & [name*="controls"] {
+        inline-size: var(--size-9);
+    }
 }

@@ -3,8 +3,26 @@ import { Player } from './Player/Player';
 import { PLAYER_COLORS } from './config/config';
 import './style.css';
 
+const addPlayerRow = (idx: number) => `
+<fieldset class="player-row">
+    <input type="color" value="${PLAYER_COLORS[idx]}">
+    <div class="input-wrapper">
+        <label for="name${idx}">Your name</label>
+        <input id="name${idx}" type="text">
+    </div>
+    <div class="input-wrapper">
+        <label for="controlsLeft${idx}">Left</label>
+        <input name="controlsLeft${idx}" type="text" maxlength="1">
+    </div>
+    <div class="input-wrapper">
+        <label for="controlsRight${idx}">Right</label>
+        <input name="controlsRight${idx}" type="text" maxlength="1">
+    </div>
+</fieldset>
+`;
+
 document.querySelector('form')!.innerHTML = `
-  <h2>Start Game</h2>
+  ${[1,2,3].map((_item, idx) => addPlayerRow(idx)).join('\n')}
 `;
 
 const DEFAULT_CANVAS_SIZE = 500;

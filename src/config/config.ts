@@ -1,4 +1,4 @@
-export const BASE_SPEED = 0.5;
+export const BASE_SPEED = 1;
 /**
  * Adjusts the radius with which the line is turning.
  * Higher values mean a fast turn.

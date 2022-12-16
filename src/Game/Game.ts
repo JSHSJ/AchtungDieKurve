@@ -17,12 +17,9 @@ export class Game {
     }
 
     animate() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        for (let i = 0; i < particleArray.length; i++) {
-            particleArray[i].update();
-            particleArray[i].draw();
-        }
-        requestAnimationFrame(animate);
+        this?.ctx?.clearRect(0, 0, this.width, this.height);
+        // loop here
+        requestAnimationFrame(this.animate);
     }
 
     public checkCollisions() {

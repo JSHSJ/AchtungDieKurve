@@ -2,8 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   postcss-preset-env: ^7.8.3
+  prettier: ^2.8.1
   typescript: ^4.9.3
   vite: ^4.0.0
+
+dependencies:
+  prettier: 2.8.1
 
 devDependencies:
   postcss-preset-env: 7.8.3
@@ -818,6 +822,12 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
     dev: true
+
+  /prettier/2.8.1:
+    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: false
 
   /resolve/1.22.1:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}

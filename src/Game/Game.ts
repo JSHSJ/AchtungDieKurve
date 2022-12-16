@@ -1,6 +1,7 @@
 import { PLAYER_WIDTH } from '../config/config';
 import { Player } from '../Player/Player';
 import { doPointsIntersect } from '../util/doPointsIntersect';
+import { TDrawPathTypes } from '../types/TDrawPath';
 
 export class Game {
     public ctx: CanvasRenderingContext2D;
@@ -85,9 +86,17 @@ export class Game {
                         return;
                     }
 
+                    // Skip collision for tunnels and tunneling players
+                    if (
+                        position.type === TDrawPathTypes.Tunnel ||
+                        otherPlayer.currentDrawMode === TDrawPathTypes.Tunnel
+                    ) {
+                        return;
+                    }
+
+                    // check collision with other player
                     if (doPointsIntersect(position, otherPlayer.currentPosition)) {
-                        otherPlayer.die();
-                        console.log(position, otherPlayer.currentPosition);
+                        player.die();
                     }
                 });
             });

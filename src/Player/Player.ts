@@ -23,7 +23,7 @@ export class Player {
     public previousPositions: TDrawPath[];
     private counter = 0;
     private controls: TControls;
-    private currentDrawMode = TDrawPathTypes.Line;
+    public currentDrawMode = TDrawPathTypes.Line;
     private currentDrawModeTicks = LINE_FRAMES;
 
     constructor(args: PlayerArgs) {

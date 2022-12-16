@@ -32,7 +32,7 @@ export class Player {
 
     this.isAlive = true;
     this.previousPositions = [];
-    this.previousPositions.push(args.startPosition);
+    this.previousPositions.push(clonePoint(args.startPosition));
     this.updateDirection();
   }
 
@@ -79,8 +79,17 @@ export class Player {
 
   public updatePreviousPositions() {
     const previousPoint = this.previousPositions.at(-1);
-    if (!previousPoint || !doPointsIntersect(previousPoint, this.currentPosition)) {
-    this.previousPositions.push(Object.assign({}, this.currentPosition));
+    const newPoint = clonePoint(this.currentPosition);
+    if (!previousPoint || !doPointsIntersect(previousPoint, newPoint)) {
+this.previousPositions.push(newPoint);
     }
   }
+}
+
+
+const clonePoint = (point: TPosition) => {
+    return {
+        x: point.x,
+        y: point.y,
+    }
 }

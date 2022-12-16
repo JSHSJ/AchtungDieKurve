@@ -58,6 +58,9 @@ export class Game {
 
         this.checkCollisions();
 
+        // clear react to redraw
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        //redraw
         for (const player of this.players) {
             player.draw(this.ctx);
             player.updatePreviousPositions();

@@ -37,10 +37,7 @@ export class Player {
 
         this.isAlive = true;
         this.previousPositions = [];
-        this.previousPositions.push(createDrawPath(
-            this.startPosition,
-            TDrawPathTypes.Line,
-        ));
+        this.previousPositions.push(createDrawPath(this.startPosition, TDrawPathTypes.Line));
         this.updateDirection();
     }
 
@@ -77,8 +74,21 @@ export class Player {
             this.switchDrawMode();
         }
 
+        // Redraw player path
+        let prevPos = this.previousPositions[0];
+        this.previousPositions.forEach((drawPath) => {
+            ctx.beginPath();
+            ctx.moveTo(prevPos.x, prevPos.y);
+            ctx.strokeStyle = drawPath.type === TDrawPathTypes.Line ? this.color : 'transparent';
+            ctx.lineWidth = 2 * PLAYER_WIDTH;
+            ctx.lineCap = 'round';
+            ctx.lineTo(drawPath.x, drawPath.y);
+            ctx.stroke();
+            prevPos = drawPath;
+        });
+
         ctx.beginPath();
-        ctx.fillStyle = this.currentDrawMode === TDrawPathTypes.Line ? this.color : 'transparent';
+        ctx.fillStyle = this.color;
         ctx.arc(
             this.currentPosition.x,
             this.currentPosition.y,

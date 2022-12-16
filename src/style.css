@@ -12,7 +12,6 @@ main {
     display: grid;
     padding: var(--size-3);
     gap: var(--size-3);
-    background-color: var(--gray-8);
     grid:
         'header header' auto
         'canvas menu' 1fr
@@ -29,13 +28,14 @@ header {
 
 .canvas-wrapper {
     grid-area: canvas;
-    background-color: var(--gray-8);
+    background-color: var(--surface-2);
+    border-radius: var(--radius-1);
 }
 
 canvas {
     block-size: 100%;
     aspect-ratio: 1/1;
-    background-color: var(--gray-10);
+    background-color: var(--surface-2);
     border: 1px solid var(--gray-7);
     box-shadow: var(--shadow-3);
 }
@@ -43,8 +43,6 @@ canvas {
 aside {
     grid-area: menu;
     /* background-color: var(--gray-9); */
-    box-shadow: var(--shadow-3);
-    border: inset 1px solid var(--gray-7);
     padding: var(--size-1);
 }
 
@@ -63,7 +61,6 @@ form {
     align-items: end;
     gap: var(--size-3);
     padding: var(--size-3);
-    background-color: var(--surface-2);
 
     /* & > * {
         min-inline-size: 0;

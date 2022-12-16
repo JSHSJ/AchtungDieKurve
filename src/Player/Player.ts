@@ -1,9 +1,10 @@
 import { TPosition } from '../types/TPosition';
 import { TDirection } from '../types/TDirection';
-import { updateRotationValueSin, updateRotationValueCos } from '../util/updateRotationValue';
-import { PLAYER_WIDTH, BASE_SPEED } from '../config/config';
+import { updateRotationValueCos, updateRotationValueSin } from '../util/updateRotationValue';
+import { BASE_SPEED, LINE_FRAMES, PLAYER_WIDTH, TUNNEL_FRAMES } from '../config/config';
 import { TControls } from '../types/TControls';
 import { doPointsIntersect } from '../util/doPointsIntersect';
+import { TDrawPath, TDrawPathTypes } from '../types/TDrawPath';
 
 export type PlayerArgs = {
     id: string;
@@ -19,9 +20,11 @@ export class Player {
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
-    public previousPositions: TPosition[];
+    public previousPositions: TDrawPath[];
     private counter = 0;
     private controls: TControls;
+    private currentDrawMode = TDrawPathTypes.Line;
+    private currentDrawModeTicks = LINE_FRAMES;
 
     constructor(args: PlayerArgs) {
         this.id = args.id;
@@ -32,7 +35,7 @@ export class Player {
 
         this.isAlive = true;
         this.previousPositions = [];
-        this.previousPositions.push(clonePoint(args.startPosition));
+        this.previousPositions.push(createDrawPath(args.startPosition, TDrawPathTypes.Line));
         this.updateDirection();
     }
 
@@ -65,8 +68,12 @@ export class Player {
     public draw(ctx: CanvasRenderingContext2D) {
         if (!this.isAlive) return;
 
+        if (this.currentDrawModeTicks <= 0) {
+            this.switchDrawMode();
+        }
+
         ctx.beginPath();
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = this.currentDrawMode === TDrawPathTypes.Line ? this.color : 'transparent';
         ctx.arc(
             this.currentPosition.x,
             this.currentPosition.y,
@@ -77,20 +84,34 @@ export class Player {
         );
         ctx.fill();
         ctx.closePath();
+
+        this.currentDrawModeTicks--;
     }
 
     public updatePreviousPositions() {
         const previousPoint = this.previousPositions.at(-1);
-        const newPoint = clonePoint(this.currentPosition);
+        const newPoint = { x: this.currentPosition.x, y: this.currentPosition.y };
+
         if (!previousPoint || !doPointsIntersect(previousPoint, newPoint)) {
-            this.previousPositions.push(newPoint);
+            this.previousPositions.push(createDrawPath(newPoint, this.currentDrawMode));
         }
+    }
+
+    private switchDrawMode() {
+        this.currentDrawMode =
+            this.currentDrawMode === TDrawPathTypes.Line
+                ? TDrawPathTypes.Tunnel
+                : TDrawPathTypes.Line;
+
+        this.currentDrawModeTicks =
+            this.currentDrawMode === TDrawPathTypes.Line ? LINE_FRAMES : TUNNEL_FRAMES;
     }
 }
 
-const clonePoint = (point: TPosition) => {
+const createDrawPath = (point: TPosition, type: TDrawPathTypes): TDrawPath => {
     return {
         x: point.x,
         y: point.y,
+        type,
     };
 };

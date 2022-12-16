@@ -3,6 +3,10 @@ import { Player } from './Player/Player';
 import { PLAYER_COLORS } from './config/config';
 import './style.css'
 
+document.querySelector('form')!.innerHTML = `
+  <h2>Start Game</h2>
+`;
+
 const DEFAULT_CANVAS_SIZE = 500;
 
 window.addEventListener('load', function() {

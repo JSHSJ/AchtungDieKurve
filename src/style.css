@@ -1,5 +1,6 @@
 @import "open-props/postcss/style";
 @import "open-props/postcss/normalize";
+@import "open-props/postcss/buttons";
 
 html,
 body {
@@ -53,7 +54,7 @@ aside {
     display: grid;
 }
 
-form {
+.form-rows {
     display: grid;
     gap: var(--size-2);
 }
@@ -78,4 +79,12 @@ form {
     & [name*="controls"] {
         inline-size: var(--size-9);
     }
+}
+
+#add {
+    border-radius: var(--radius-2);
+    border: var(--border-size-1) solid var(--surface-4);
+    padding: var(--size-3);
+    background: var(--surface-2);
+    box-shadow: var(--inner-shadow-2);
 }

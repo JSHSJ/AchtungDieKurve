@@ -4,6 +4,7 @@ import { PLAYER_COLORS } from './config/config';
 import './style.css';
 
 const form = document.querySelector('form');
+const formRows = document.querySelector('.form-rows');
 
 let numberOfPlayers = 2;
 let players: Player[] = [];
@@ -59,10 +60,9 @@ form?.addEventListener('formdata', (e: FormDataEvent) => {
 });
 
 const renderForm = () => {
-    form!.innerHTML = `
+    formRows!.innerHTML = `
         ${new Array(numberOfPlayers).fill(0).map((_item, idx) => addPlayerRow(idx)).join('\n')}
         <button type="button" id="add">Add +</button>
-        <button type="submit">Start</button>
     `;
 
     document.getElementById('add')?.addEventListener('click', () => {

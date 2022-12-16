@@ -61,20 +61,18 @@ form?.addEventListener('formdata', (e: FormDataEvent) => {
 const renderForm = () => {
     form!.innerHTML = `
         ${new Array(numberOfPlayers).fill(0).map((_item, idx) => addPlayerRow(idx)).join('\n')}
-        <fieldset>
-            <button type="button" id="add">Add +</button>
-        </fieldset>
+        <button type="button" id="add">Add +</button>
         <button type="submit">Start</button>
     `;
+
+    document.getElementById('add')?.addEventListener('click', () => {
+        console.log('clicked');
+        numberOfPlayers += 1;
+        renderForm();
+    });
 }
 
 renderForm();
-
-document.getElementById('#add')?.addEventListener('click', () => {
-    console.log('clicked');
-    numberOfPlayers += 1;
-    renderForm();
-});
 
 const startGame = () => {
     const myGame = new Game(ctx!, players);

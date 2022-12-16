@@ -7,7 +7,7 @@ html, body {
 
 main {
   inline-size: 100%;
-  min-block-size: 100vh;
+  block-size: 100vh;
   display: grid;
   padding: var(--size-3);
   gap: var(--size-3);
@@ -15,7 +15,11 @@ main {
   grid:
     "header header" auto
     "canvas menu" 1fr
-    / 1fr auto;
+    / auto 1fr;
+
+  & > * {
+    min-inline-size: 0;
+  }
 }
 
 header {
@@ -28,17 +32,17 @@ header {
 }
 
 canvas {
-  inline-size: 100%;
   block-size: 100%;
   aspect-ratio: 1/1;
-  background-color: var(--gray-7);
-  border: 1px solid var(--gray-6);
+  background-color: var(--gray-10);
+  border: 1px solid var(--gray-7);
   box-shadow: var(--shadow-3);
 }
 
 aside {
   grid-area: menu;
-  background-color: var(--gray-9);
+  /* background-color: var(--gray-9); */
   box-shadow: var(--shadow-3);
   border: inset 1px solid var(--gray-7);
+  padding: var(--size-1);
 }

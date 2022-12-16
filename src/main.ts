@@ -1,4 +1,5 @@
 import { Game } from './Game/Game';
+import { Player } from './Player/Player';
 import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -22,6 +23,10 @@ window.addEventListener('load', function() {
   ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
   ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
 
-  const myGame = new Game(ctx);
+  const players = [
+    new Player('#1', 'red', { x: 50, y: 50 }, { x: 0.5, y: -0.5 })
+  ];
+  const myGame = new Game(ctx, players);
+  myGame.animate();
 });
 

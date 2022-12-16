@@ -1,20 +1,30 @@
+import { Player } from "../Player/Player";
+
 export class Game {
-    public ctx: CanvasRenderingContext2D;
-    public width: number;
-    public height: number;
+  public ctx: CanvasRenderingContext2D;
+  public width: number;
+  public height: number;
 
-    constructor(ctx: CanvasRenderingContext2D) {
-        this.ctx = ctx;
-        this.width = ctx.canvas.width;
-        this.height = ctx.canvas.height;
-    }
+  private players: Player[];
 
-    animate() {
-        // loop here
-        requestAnimationFrame(this.animate);
-    }
+  constructor(ctx: CanvasRenderingContext2D) {
+    this.ctx = ctx;
+    this.width = ctx.canvas.width;
+    this.height = ctx.canvas.height;
+    this.players = [];
+  }
 
-    public checkCollisions() {
+  animate() {
+    // loop here
 
-    }
+    this.players.forEach((player) => {
+      player.move();
+    });
+
+    this.checkCollisions();
+    this.draw();
+    requestAnimationFrame(this.animate);
+  }
+
+  public checkCollisions() {}
 }

@@ -3,7 +3,7 @@
 
 html,
 body {
-    background-color: var(--surface-1);
+    background-color: var(--surface-2);
 }
 
 main {
@@ -13,7 +13,6 @@ main {
     padding: var(--size-3);
     gap: var(--size-3);
     grid:
-        'header header' auto
         'canvas menu' 1fr
         / auto 1fr;
 
@@ -22,28 +21,46 @@ main {
     }
 }
 
-header {
-    grid-area: header;
-}
-
 .canvas-wrapper {
     grid-area: canvas;
-    background-color: var(--surface-2);
-    border-radius: var(--radius-1);
 }
 
 canvas {
     block-size: 100%;
     aspect-ratio: 1/1;
-    background-color: var(--surface-2);
-    border: 1px solid var(--gray-7);
+    background-color: var(--surface-1);
+    border: 1px solid var(--surface-4);
     box-shadow: var(--shadow-3);
 }
 
 aside {
     grid-area: menu;
     /* background-color: var(--gray-9); */
+    box-shadow: var(--shadow-3);
+    border: 1px solid var(--surface-4);
     padding: var(--size-1);
+}
+
+dialog {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--surface-4);
+    --padding-dialog: var(--size-3);
+}
+
+dialog header {
+    display: flex;
+    padding: var(--padding-dialog);
+    border-bottom: 1px solid var(--surface-4);
+    background: var(--surface-3);
+    border-top-right-radius: var(--radius-3);
+    border-top-left-radius: var(--radius-3);
+}
+
+dialog .content {
+    padding: var(--padding-dialog);
 }
 
 .input-wrapper {

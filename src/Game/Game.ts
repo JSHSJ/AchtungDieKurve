@@ -97,10 +97,11 @@ export class Game {
       // check collision with other players
       player.previousPositions.forEach((position, idx) => {
         this.players.forEach((otherPlayer) => {
-          if (player.id === otherPlayer.id && idx < 1) {
+          // skip last position of current player to avoic instant self collision
+          if (player.id === otherPlayer.id && idx === player.previousPositions.length - 1) {
             return;
           }
-          
+
           if (doPointsIntersect(position, otherPlayer.currentPosition)) {
             otherPlayer.die();
             console.log(position, otherPlayer.currentPosition)

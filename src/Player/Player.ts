@@ -7,6 +7,7 @@ import { doPointsIntersect } from '../util/doPointsIntersect';
 import { TDrawPath, TDrawPathTypes } from '../types/TDrawPath';
 
 export type PlayerArgs = {
+    ctx: CanvasRenderingContext2D;
     id: string;
     color: string;
     startPosition: TPosition;
@@ -15,11 +16,13 @@ export type PlayerArgs = {
 };
 
 export class Player {
+    public ctx: CanvasRenderingContext2D;
     public id: string;
     public isAlive: boolean;
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
+    public startPosition: TPosition;
     public previousPositions: TDrawPath[];
     private counter = 0;
     private controls: TControls;
@@ -27,15 +30,23 @@ export class Player {
     private currentDrawModeTicks = LINE_FRAMES;
 
     constructor(args: PlayerArgs) {
+        this.ctx = args.ctx;
         this.id = args.id;
         this.color = args.color;
-        this.currentPosition = args.startPosition;
+        this.startPosition = {
+            x: Math.random() * (this.ctx.canvas.width - 30) - 15,
+            y: Math.random() * (this.ctx.canvas.height - 30) - 15,
+        },
+        this.currentPosition = this.startPosition;
         this.counter = args.startCounter;
         this.controls = args.controls;
 
         this.isAlive = true;
         this.previousPositions = [];
-        this.previousPositions.push(createDrawPath(args.startPosition, TDrawPathTypes.Line));
+        this.previousPositions.push(createDrawPath(
+            this.startPosition,
+            TDrawPathTypes.Line,
+        ));
         this.updateDirection();
     }
 

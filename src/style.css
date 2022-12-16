@@ -22,8 +22,9 @@ header {
 canvas {
   inline-size: 100%;
   block-size: 100%;
+  aspect-ratio: 1/1;
   grid-area: canvas;
-  background-color: var(--gray-2);
+  background-color: var(--gray-4);
 }
 
 menu {

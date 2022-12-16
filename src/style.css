@@ -44,9 +44,6 @@ canvas {
 
 aside {
     grid-area: menu;
-    background: var(--surface-3);
-    box-shadow: var(--shadow-3);
-    border: 1px solid var(--surface-4);
     padding: var(--size-3);
 }
 
@@ -65,8 +62,6 @@ aside {
     align-items: end;
     gap: var(--size-3);
     padding: var(--size-3);
-    background: var(--surface-2);
-    box-shadow: var(--inner-shadow-2);
 
     /* & > * {
         min-inline-size: 0;
@@ -85,6 +80,4 @@ aside {
     border-radius: var(--radius-2);
     border: var(--border-size-1) solid var(--surface-4);
     padding: var(--size-3);
-    background: var(--surface-2);
-    box-shadow: var(--inner-shadow-2);
 }

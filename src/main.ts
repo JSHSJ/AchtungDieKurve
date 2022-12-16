@@ -11,10 +11,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <button type="button">Starten</button>
     </menu>
   </main>
-`
+`;
 
-const canvas = document.querySelector('canvas');
-console.log(canvas);
+const DEFAULT_CANVAS_SIZE = 500;
 
-const myGame = new Game();
+window.addEventListener('load', function() {
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas?.getContext("2d");
+  if (!ctx) throw Error('Canvas context (ctx) is not defined');
+  ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
+  ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
+
+  const myGame = new Game(ctx);
+});
 

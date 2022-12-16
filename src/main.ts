@@ -92,8 +92,9 @@ window.addEventListener('load', function () {
     if (!ctx) throw Error('Canvas context (ctx) is not defined');
     ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
     ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
+    init();
 });
 
-const init = () => {};
-
-init();
+const init = () => {
+    startGame();
+};

@@ -34,7 +34,8 @@ export class Game {
 
     loop() {
         if (this.players.filter((player) => player.isAlive).length <= 1) {
-            console.log('GAME OVER');
+            console.log(this.players);
+            this.drawWinner();
             return;
         }
 
@@ -96,10 +97,72 @@ export class Game {
 
                     // check collision with other player
                     if (doPointsIntersect(position, otherPlayer.currentPosition)) {
-                        player.die();
+                        otherPlayer.die();
                     }
                 });
             });
         });
+    }
+
+    private drawWinner() {
+        const winner = this.players.find((player) => player.isAlive);
+        if (winner) {
+            const midX = this.width / 2 - 75;
+            const midY = this.height / 2 - 120;
+            this.ctx.fillStyle = winner.color;
+            this.ctx.beginPath();
+            this.ctx.moveTo(midX + 75, midY + 40);
+            this.ctx.bezierCurveTo(
+                midX + 75,
+                midY + 37,
+                midX + 70,
+                midY + 25,
+                midX + 50,
+                midY + 25,
+            );
+            this.ctx.bezierCurveTo(
+                midX + 20,
+                midY + 25,
+                midX + 20,
+                midY + 62.5,
+                midX + 20,
+                midY + 62.5,
+            );
+            this.ctx.bezierCurveTo(
+                midX + 20,
+                midY + 80,
+                midX + 40,
+                midY + 102,
+                midX + 75,
+                midY + 120,
+            );
+            this.ctx.bezierCurveTo(
+                midX + 110,
+                midY + 102,
+                midX + 130,
+                midY + 80,
+                midX + 130,
+                midY + 62.5,
+            );
+            this.ctx.bezierCurveTo(
+                midX + 130,
+                midY + 62.5,
+                midX + 130,
+                midY + 25,
+                midX + 100,
+                midY + 25,
+            );
+            this.ctx.bezierCurveTo(
+                midX + 85,
+                midY + 25,
+                midX + 75,
+                midY + 37,
+                midX + 75,
+                midY + 40,
+            );
+            this.ctx.fill();
+            this.ctx.font = '30px Arial';
+            this.ctx.fillText('WINNER', midX + 10, midY + 160);
+        }
     }
 }

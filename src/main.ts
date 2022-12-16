@@ -1,18 +1,7 @@
 import { Game } from './Game/Game';
 import { Player } from './Player/Player';
+import { PLAYER_COLORS } from './config/config';
 import './style.css'
-
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <main>
-    <header>
-      <h1>Achtung die Kurve</h1>
-    </header>
-    <canvas></canvas>
-    <menu>
-      <button type="button">Starten</button>
-    </menu>
-  </main>
-`;
 
 const DEFAULT_CANVAS_SIZE = 500;
 
@@ -24,9 +13,22 @@ window.addEventListener('load', function() {
   ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
 
   const players = [
-    new Player('#1', 'red', { x: 50, y: 50 }, { x: 0.5, y: -0.5 })
+    new Player({
+      id: '#1',
+      color: PLAYER_COLORS[0],
+      startPosition: { x: 250, y: 250 },
+      startCounter: 40,
+      controls: { left: 'ArrowLeft', right: 'ArrowRight' }
+    }),
+    new Player({
+      id: '#2',
+      color: PLAYER_COLORS[1],
+      startPosition: { x: 100, y: 300 },
+      startCounter: 40,
+      controls: { left: 'q', right: 'w' }
+    }),
   ];
   const myGame = new Game(ctx, players);
-  myGame.animate();
+  myGame.loop();
 });
 

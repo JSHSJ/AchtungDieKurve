@@ -32,29 +32,37 @@ const addPlayerRow = (idx: number) => `
 form?.addEventListener('submit', (e) => {
     e.preventDefault();
     new FormData(form);
-  });
+});
+
+let game: Game;
 
 form?.addEventListener('formdata', (e: FormDataEvent) => {
     e.preventDefault();
+    if (game) {
+        startGame();
+        return;
+    }
     const formData = e.formData;
 
-    Array(numberOfPlayers).fill(0).forEach((_player, idx) => {
-        players.push(new Player({
-            id: formData.get(`player[${idx}][name]`) as string,
-            color: formData.get(`player[${idx}][color]`) as string,
-            startCounter: 40,
-            startPosition: {
-                x: Math.random() * (ctx!.canvas.width - 30) - 15,
-                y: Math.random() * (ctx!.canvas.height - 30) - 15,
-            },
-            controls: {
-                left: formData.get(`player[${idx}][controls][left]`) as string,
-                right: formData.get(`player[${idx}][controls][right]`) as string,
-            },
-        }))
-    });
+    Array(numberOfPlayers)
+        .fill(0)
+        .forEach((_player, idx) => {
+            players.push(
+                new Player({
+                    id: formData.get(`player[${idx}][name]`) as string,
+                    color: formData.get(`player[${idx}][color]`) as string,
+                    startPosition: () => ({
+                        x: Math.random() * (ctx!.canvas.width - 30) - 15,
+                        y: Math.random() * (ctx!.canvas.height - 30) - 15,
+                    }),
+                    controls: {
+                        left: formData.get(`player[${idx}][controls][left]`) as string,
+                        right: formData.get(`player[${idx}][controls][right]`) as string,
+                    },
+                }),
+            );
+        });
 
-    console.log(players);
     startGame();
 });
 
@@ -75,8 +83,12 @@ const renderForm = () => {
 renderForm();
 
 const startGame = () => {
-    const myGame = new Game(ctx!, players);
-    myGame.loop();
+    if (!game) {
+        game = new Game(ctx!, players);
+    } else {
+        game.reset();
+    }
+    game.loop();
 };
 
 window.addEventListener('load', function () {

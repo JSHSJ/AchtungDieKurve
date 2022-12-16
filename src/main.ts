@@ -22,7 +22,7 @@ const addPlayerRow = (idx: number) => `
 `;
 
 document.querySelector('form')!.innerHTML = `
-  ${[1,2,3].map((_item, idx) => addPlayerRow(idx)).join('\n')}
+  ${[1, 2, 3].map((_item, idx) => addPlayerRow(idx)).join('\n')}
 `;
 
 const DEFAULT_CANVAS_SIZE = 500;
@@ -57,14 +57,6 @@ window.addEventListener('load', function () {
     ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
 });
 
-const init = () => {
-    const menuDialog: HTMLDialogElement | null = document.getElementById(
-        'menu-screen',
-    ) as HTMLDialogElement;
-    const startButton: HTMLButtonElement | null = document.getElementById(
-        'start-button',
-    ) as HTMLButtonElement;
-    startButton!.onclick = startGame;
-};
+const init = () => {};
 
 init();

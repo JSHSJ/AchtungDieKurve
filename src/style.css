@@ -1,6 +1,5 @@
-@import 'https://unpkg.com/open-props/src/index.css';
-@import 'https://unpkg.com/open-props/src/extra/normalize.css';
-@import "https://unpkg.com/open-props/src/extra/buttons.css";
+@import "open-props/postcss/style";
+@import "open-props/postcss/normalize";
 
 html,
 body {

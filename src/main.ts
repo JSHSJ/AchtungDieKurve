@@ -26,14 +26,9 @@ document.querySelector('form')!.innerHTML = `
 `;
 
 const DEFAULT_CANVAS_SIZE = 500;
+let ctx: CanvasRenderingContext2D | undefined;
 
-window.addEventListener('load', function () {
-    const canvas = document.querySelector('canvas');
-    const ctx = canvas?.getContext('2d');
-    if (!ctx) throw Error('Canvas context (ctx) is not defined');
-    ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
-    ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
-
+const startGame = () => {
     const players = [
         new Player({
             id: '#1',
@@ -50,6 +45,26 @@ window.addEventListener('load', function () {
             controls: { left: 'q', right: 'w' },
         }),
     ];
-    const myGame = new Game(ctx, players);
+    const myGame = new Game(ctx!, players);
     myGame.loop();
+};
+
+window.addEventListener('load', function () {
+    const canvas = document.querySelector('canvas');
+    ctx = canvas?.getContext('2d') || undefined;
+    if (!ctx) throw Error('Canvas context (ctx) is not defined');
+    ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
+    ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
 });
+
+const init = () => {
+    const menuDialog: HTMLDialogElement | null = document.getElementById(
+        'menu-screen',
+    ) as HTMLDialogElement;
+    const startButton: HTMLButtonElement | null = document.getElementById(
+        'start-button',
+    ) as HTMLButtonElement;
+    startButton!.onclick = startGame;
+};
+
+init();

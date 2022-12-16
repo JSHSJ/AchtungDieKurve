@@ -10,7 +10,6 @@ export class Game {
     }
 
     animate() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
         // loop here
         requestAnimationFrame(this.animate);
     }

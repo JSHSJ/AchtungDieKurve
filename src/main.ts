@@ -1,3 +1,4 @@
+import { Game } from './Game/Game';
 import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -14,4 +15,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const canvas = document.querySelector('canvas');
 console.log(canvas);
+
+const myGame = new Game();
 

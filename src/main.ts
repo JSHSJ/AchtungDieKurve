@@ -53,8 +53,8 @@ form?.addEventListener('formdata', (e: FormDataEvent) => {
                     id: formData.get(`player[${idx}][name]`) as string,
                     color: formData.get(`player[${idx}][color]`) as string,
                     startPosition: () => ({
-                        x: Math.random() * (ctx!.canvas.width - 30) - 15,
-                        y: Math.random() * (ctx!.canvas.height - 30) - 15,
+                        x: Math.random() * (ctx!.canvas.width - 100) + 50,
+                        y: Math.random() * (ctx!.canvas.height - 100) + 50,
                     }),
                     controls: {
                         left: formData.get(`player[${idx}][controls][left]`) as string,
@@ -69,7 +69,10 @@ form?.addEventListener('formdata', (e: FormDataEvent) => {
 
 const renderForm = () => {
     formRows!.innerHTML = `
-        ${new Array(numberOfPlayers).fill(0).map((_item, idx) => addPlayerRow(idx)).join('\n')}
+        ${new Array(numberOfPlayers)
+            .fill(0)
+            .map((_item, idx) => addPlayerRow(idx))
+            .join('\n')}
         <button type="button" id="add">Add +</button>
     `;
 
@@ -78,7 +81,7 @@ const renderForm = () => {
         numberOfPlayers += 1;
         renderForm();
     });
-}
+};
 
 renderForm();
 

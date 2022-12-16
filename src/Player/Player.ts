@@ -61,13 +61,7 @@ export class Player {
         this.direction.x = updateRotationValueCos(this.counter + Math.PI);
     }
 
-    public draw(ctx: CanvasRenderingContext2D) {
-        if (!this.isAlive) return;
-
-        if (this.currentDrawModeTicks <= 0) {
-            this.switchDrawMode();
-        }
-
+    private redrawPreviousPositions(ctx: CanvasRenderingContext2D) {
         // Redraw player path
         let prevPos = this.previousPositions[0];
         this.previousPositions.forEach((drawPath) => {
@@ -80,6 +74,15 @@ export class Player {
             ctx.stroke();
             prevPos = drawPath;
         });
+    }
+
+    public draw(ctx: CanvasRenderingContext2D) {
+        this.redrawPreviousPositions(ctx);
+        if (!this.isAlive) return;
+
+        if (this.currentDrawModeTicks <= 0) {
+            this.switchDrawMode();
+        }
 
         ctx.beginPath();
         ctx.fillStyle = this.color;
@@ -118,6 +121,7 @@ export class Player {
 
     public reset() {
         this.currentPosition = this.startPosition();
+        console.log(this.currentPosition);
         this.counter = Math.random() * 100;
         this.isAlive = true;
         this.previousPositions = [];

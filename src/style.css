@@ -1,48 +1,49 @@
-@import "https://unpkg.com/open-props/src/index.css";
-@import "https://unpkg.com/open-props/src/extra/normalize.css";
+@import 'https://unpkg.com/open-props/src/index.css';
+@import 'https://unpkg.com/open-props/src/extra/normalize.css';
 
-html, body {
-  background-color: var(--surface-1);
+html,
+body {
+    background-color: var(--surface-1);
 }
 
 main {
-  inline-size: 100%;
-  block-size: 100vh;
-  display: grid;
-  padding: var(--size-3);
-  gap: var(--size-3);
-  background-color: var(--gray-8);
-  grid:
-    "header header" auto
-    "canvas menu" 1fr
-    / auto 1fr;
+    inline-size: 100%;
+    block-size: 100vh;
+    display: grid;
+    padding: var(--size-3);
+    gap: var(--size-3);
+    background-color: var(--gray-8);
+    grid:
+        'header header' auto
+        'canvas menu' 1fr
+        / auto 1fr;
 
-  & > * {
-    min-inline-size: 0;
-  }
+    & > * {
+        min-inline-size: 0;
+    }
 }
 
 header {
-  grid-area: header;
+    grid-area: header;
 }
 
 .canvas-wrapper {
-  grid-area: canvas;
-  background-color: var(--gray-8);
+    grid-area: canvas;
+    background-color: var(--gray-8);
 }
 
 canvas {
-  block-size: 100%;
-  aspect-ratio: 1/1;
-  background-color: var(--gray-10);
-  border: 1px solid var(--gray-7);
-  box-shadow: var(--shadow-3);
+    block-size: 100%;
+    aspect-ratio: 1/1;
+    background-color: var(--gray-10);
+    border: 1px solid var(--gray-7);
+    box-shadow: var(--shadow-3);
 }
 
 aside {
-  grid-area: menu;
-  /* background-color: var(--gray-9); */
-  box-shadow: var(--shadow-3);
-  border: inset 1px solid var(--gray-7);
-  padding: var(--size-1);
+    grid-area: menu;
+    /* background-color: var(--gray-9); */
+    box-shadow: var(--shadow-3);
+    border: inset 1px solid var(--gray-7);
+    padding: var(--size-1);
 }

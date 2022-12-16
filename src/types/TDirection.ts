@@ -4,4 +4,4 @@
 export type TDirection = {
     x: number;
     y: number;
-}
+};

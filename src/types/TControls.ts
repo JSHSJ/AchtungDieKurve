@@ -3,6 +3,6 @@
  * steering left and right.
  */
 export type TControls = {
-  left: string;
-  right: string;
-}
+    left: string;
+    right: string;
+};

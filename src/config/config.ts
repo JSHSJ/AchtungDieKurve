@@ -1,5 +1,13 @@
 export const BASE_SPEED = 0.5;
-export const BASE_ROTATION = 0.01;
+/**
+ * Adjusts the radius with which the line is turning.
+ * Higher values mean a fast turn.
+ */
+export const BASE_TURNING_RADIUS = 0.003;
+/**
+ * Adjusts the line width. Higher values lead to
+ * a bigger line.
+ */
 export const PLAYER_WIDTH = 2;
 
 export const PLAYER_COLORS = [

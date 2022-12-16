@@ -32,9 +32,14 @@ export class Game {
         });
     }
 
+    reset() {
+        this.players.forEach((player) => {
+            player.reset();
+        });
+    }
+
     loop() {
         if (this.players.filter((player) => player.isAlive).length <= 1) {
-            console.log(this.players);
             this.drawWinner();
             return;
         }

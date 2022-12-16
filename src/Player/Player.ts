@@ -9,8 +9,7 @@ import { TDrawPath, TDrawPathTypes } from '../types/TDrawPath';
 export type PlayerArgs = {
     id: string;
     color: string;
-    startPosition: TPosition;
-    startCounter: number;
+    startPosition: () => TPosition;
     controls: TControls;
 };
 
@@ -20,7 +19,7 @@ export class Player {
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
-    public startPosition: TPosition;
+    public startPosition: () => TPosition;
     public previousPositions: TDrawPath[];
     private counter = 0;
     private controls: TControls;
@@ -30,15 +29,10 @@ export class Player {
     constructor(args: PlayerArgs) {
         this.id = args.id;
         this.color = args.color;
-        this.startPosition = args.startPosition,
-        this.currentPosition = this.startPosition;
-        this.counter = args.startCounter;
+        this.startPosition = args.startPosition;
         this.controls = args.controls;
 
-        this.isAlive = true;
-        this.previousPositions = [];
-        this.previousPositions.push(createDrawPath(this.startPosition, TDrawPathTypes.Line));
-        this.updateDirection();
+        this.reset();
     }
 
     public move() {
@@ -120,6 +114,18 @@ export class Player {
 
         this.currentDrawModeTicks =
             this.currentDrawMode === TDrawPathTypes.Line ? LINE_FRAMES : TUNNEL_FRAMES;
+    }
+
+    public reset() {
+        this.currentPosition = this.startPosition();
+        this.counter = Math.random() * 100;
+        this.isAlive = true;
+        this.previousPositions = [];
+        this.previousPositions.push(
+            createDrawPath(Object.assign({}, this.currentPosition), TDrawPathTypes.Line),
+        );
+        this.currentDrawModeTicks = LINE_FRAMES;
+        this.updateDirection();
     }
 }
 

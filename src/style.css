@@ -25,6 +25,13 @@ main {
     grid-area: canvas;
 }
 
+.logo {
+    width: 100%;
+    display: block;
+    max-width: 100%;
+    color: var(--text-2);
+}
+
 canvas {
     block-size: 100%;
     aspect-ratio: 1/1;

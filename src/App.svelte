@@ -73,19 +73,39 @@
           <div class="form-rows">
             {#each Array(numberOfPlayers).fill(0) as _player, idx}
               <fieldset class="player-row" name="player">
-                  <input type="color" name="player[{idx}][color]" bind:value={PLAYER_COLORS[idx]}>
-                  <div class="input-wrapper">
-                      <label for="player[{idx}][name]">Your name</label>
-                      <input id="player[{idx}][name]" type="text" required>
-                  </div>
-                  <div class="input-wrapper">
-                      <label for="player[{idx}][controls][left]">Left</label>
-                      <input name="player[{idx}][controls][left]" type="text" maxlength="1" required>
-                  </div>
-                  <div class="input-wrapper">
-                      <label for="player[{idx}][controls][right]">Right</label>
-                      <input name="player[{idx}][controls][right]" type="text" maxlength="1" required>
-                  </div>
+                    <input
+                        type="color"
+                        name="player[{idx}][color]"
+                        bind:value={PLAYER_COLORS[idx]}
+                    >
+                    <div class="input-wrapper">
+                        <label for="player[{idx}][name]">Your name</label>
+                        <input
+                            type="text" required
+                            name="player[{idx}][name]"
+                            id="player[{idx}][name]"
+                        >
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="player[{idx}][controls][left]">Left</label>
+                        <input
+                            type="text"
+                            name="player[{idx}][controls][left]"
+                            id="player[{idx}][controls][left]"
+                            maxlength="1"
+                            required
+                        >
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="player[{idx}][controls][right]">Right</label>
+                        <input
+                            name="player[{idx}][controls][right]"
+                            id="player[{idx}][controls][right]"
+                            type="text"
+                            maxlength="1"
+                            required
+                        >
+                    </div>
               </fieldset>
             {/each}
             <button

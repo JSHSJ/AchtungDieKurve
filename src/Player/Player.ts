@@ -1,10 +1,8 @@
-import type { TPosition } from '../types/TPosition';
-import type { TDirection } from '../types/TDirection';
-import { updateRotationValueCos, updateRotationValueSin } from '../util/updateRotationValue';
-import { BASE_SPEED, LINE_FRAMES, PLAYER_WIDTH, TUNNEL_FRAMES } from '../config/config';
-import type { TControls } from '../types/TControls';
-import { doPointsIntersect } from '../util/doPointsIntersect';
-import { TDrawPathTypes, type TDrawPath } from '../types/TDrawPath';
+import type {TPosition} from '../types/TPosition';
+import type {TDirection} from '../types/TDirection';
+import {updateRotationValueCos, updateRotationValueSin} from '../util/updateRotationValue';
+import {BASE_SPEED, PLAYER_WIDTH} from '../config/config';
+import type {TControls} from '../types/TControls';
 
 export type PlayerArgs = {
     id: string;
@@ -19,17 +17,17 @@ export class Player {
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
-    public startPosition: () => TPosition;
-    public previousPositions: TDrawPath[];
+    public getStartPosition: () => TPosition;
+    private startPos: TPosition;
     private counter = 0;
     private controls: TControls;
-    public currentDrawMode = TDrawPathTypes.Line;
-    private currentDrawModeTicks = LINE_FRAMES;
+    private lineDash = [120, 15];
+    public path: Path2D;
 
     constructor(args: PlayerArgs) {
         this.id = args.id;
         this.color = args.color;
-        this.startPosition = args.startPosition;
+        this.getStartPosition = args.startPosition;
         this.controls = args.controls;
 
         this.reset();
@@ -63,26 +61,20 @@ export class Player {
 
     private redrawPreviousPositions(ctx: CanvasRenderingContext2D) {
         // Redraw player path
-        let prevPos = this.previousPositions[0];
-        this.previousPositions.forEach((drawPath) => {
-            ctx.beginPath();
-            ctx.moveTo(prevPos.x, prevPos.y);
-            ctx.strokeStyle = drawPath.type === TDrawPathTypes.Line ? this.color : 'transparent';
-            ctx.lineWidth = 2 * PLAYER_WIDTH;
-            ctx.lineCap = 'round';
-            ctx.lineTo(drawPath.x, drawPath.y);
-            ctx.stroke();
-            prevPos = drawPath;
-        });
+        ctx.moveTo(this.startPos.x, this.startPos.y);
+        ctx.beginPath();
+        ctx.setLineDash(this.lineDash);
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2 * PLAYER_WIDTH;
+        ctx.lineCap = 'round';
+        ctx.stroke(this.path);
+        ctx.closePath();
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
         this.redrawPreviousPositions(ctx);
-        if (!this.isAlive) return;
 
-        if (this.currentDrawModeTicks <= 0) {
-            this.switchDrawMode();
-        }
+        if (!this.isAlive) return;
 
         ctx.beginPath();
         ctx.fillStyle = this.color;
@@ -96,47 +88,25 @@ export class Player {
         );
         ctx.fill();
         ctx.closePath();
-
-        this.currentDrawModeTicks--;
     }
 
-    public updatePreviousPositions() {
-        const previousPoint = this.previousPositions.at(-1);
+    public updatePreviousPositions(ctx: CanvasRenderingContext2D) {
         const newPoint = { x: this.currentPosition.x, y: this.currentPosition.y };
 
-        if (!previousPoint || !doPointsIntersect(previousPoint, newPoint)) {
-            this.previousPositions.push(createDrawPath(newPoint, this.currentDrawMode));
+        if (ctx.isPointInStroke(this.path, newPoint.x, newPoint.y)) {
+            return
         }
-    }
 
-    private switchDrawMode() {
-        this.currentDrawMode =
-            this.currentDrawMode === TDrawPathTypes.Line
-                ? TDrawPathTypes.Tunnel
-                : TDrawPathTypes.Line;
+        this.path.lineTo(newPoint.x, newPoint.y);
 
-        this.currentDrawModeTicks =
-            this.currentDrawMode === TDrawPathTypes.Line ? LINE_FRAMES : TUNNEL_FRAMES;
     }
 
     public reset() {
-        this.currentPosition = this.startPosition();
-        console.log(this.currentPosition);
+        this.currentPosition = this.startPos = this.getStartPosition();
         this.counter = Math.random() * 100;
         this.isAlive = true;
-        this.previousPositions = [];
-        this.previousPositions.push(
-            createDrawPath(Object.assign({}, this.currentPosition), TDrawPathTypes.Line),
-        );
-        this.currentDrawModeTicks = LINE_FRAMES;
         this.updateDirection();
+        this.path = new Path2D();
     }
 }
 
-const createDrawPath = (point: TPosition, type: TDrawPathTypes): TDrawPath => {
-    return {
-        x: point.x,
-        y: point.y,
-        type,
-    };
-};

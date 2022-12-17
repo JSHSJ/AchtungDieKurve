@@ -68,7 +68,7 @@ export class Game {
         //redraw
         for (const player of this.players) {
             player.draw(this.ctx);
-            player.updatePreviousPositions();
+            player.updatePreviousPositions(this.ctx);
         }
     }
 
@@ -84,31 +84,14 @@ export class Game {
                 player.die();
             }
 
+            // reduce line with to prevent self collision
+            this.ctx.lineWidth = 1
             // check collision with other players
-            player.previousPositions.forEach((position, idx) => {
-                this.players.forEach((otherPlayer) => {
-                    // skip last position of current player to avoic instant self collision
-                    if (
-                        player.id === otherPlayer.id &&
-                        idx === player.previousPositions.length - 1
-                    ) {
-                        return;
-                    }
-
-                    // Skip collision for tunnels and tunneling players
-                    if (
-                        position.type === TDrawPathTypes.Tunnel ||
-                        otherPlayer.currentDrawMode === TDrawPathTypes.Tunnel
-                    ) {
-                        return;
-                    }
-
-                    // check collision with other player
-                    if (doPointsIntersect(position, otherPlayer.currentPosition)) {
-                        otherPlayer.die();
-                    }
-                });
-            });
+            this.players.forEach((otherPlayer) => {
+                if (this.ctx.isPointInStroke(player.path, otherPlayer.currentPosition.x, otherPlayer.currentPosition.y)) {
+                    otherPlayer.die();
+                }
+            })
         });
     }
 

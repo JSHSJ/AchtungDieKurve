@@ -1,7 +1,6 @@
-import { PLAYER_WIDTH } from '../config/config';
-import { Player } from '../Player/Player';
-import { doPointsIntersect } from '../util/doPointsIntersect';
-import { TDrawPathTypes } from '../types/TDrawPath';
+import {PLAYER_LINE_DASH, PLAYER_WIDTH} from '../config/config';
+import {Player} from '../Player/Player';
+import {calculateStartPosAndDirection} from "../util/calculateStartPosAndDirection";
 
 export class Game {
     public ctx: CanvasRenderingContext2D;
@@ -35,6 +34,12 @@ export class Game {
     reset() {
         this.players.forEach((player) => {
             player.reset();
+            const startParams = calculateStartPosAndDirection(this.width, this.height);
+
+            player.setStartPosition({
+                x: startParams.startX,
+                y: startParams.startY,
+            }, startParams.direction)
         });
     }
 
@@ -67,8 +72,9 @@ export class Game {
         this.ctx.clearRect(0, 0, this.width, this.height);
         //redraw
         for (const player of this.players) {
-            player.draw(this.ctx);
-            player.updatePreviousPositions(this.ctx);
+            this.drawPlayerHead(player);
+            this.drawPlayerPath(player);
+            this.updatePlayerPath(player);
         }
     }
 
@@ -154,6 +160,41 @@ export class Game {
             this.ctx.fill();
             this.ctx.font = '30px Arial';
             this.ctx.fillText('WINNER', midX + 10, midY + 160);
+        }
+    }
+
+    private drawPlayerHead = (player: Player) => {
+        if (!player.isAlive) return;
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = player.color;
+        this.ctx.arc(
+            player.currentPosition.x,
+            player.currentPosition.y,
+            PLAYER_WIDTH,
+            0,
+            Math.PI * 2,
+            false,
+        );
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    private drawPlayerPath = (player: Player) => {
+        this.ctx.moveTo(player.startPos.x, player.startPos.y);
+        this.ctx.beginPath();
+        this.ctx.setLineDash(PLAYER_LINE_DASH);
+        this.ctx.strokeStyle = player.color;
+        this.ctx.lineWidth = 2 * PLAYER_WIDTH;
+        this.ctx.lineCap = 'round';
+        this.ctx.stroke(player.path);
+        this.ctx.closePath();
+    }
+
+    private updatePlayerPath = (player: Player) => {
+        const newPoint = Object.assign({}, player.currentPosition);
+        if (!this.ctx.isPointInStroke(player.path, newPoint.x, newPoint.y)) {
+            player.updatePath(newPoint);
         }
     }
 }

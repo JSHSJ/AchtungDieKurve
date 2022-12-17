@@ -1,13 +1,12 @@
 import type {TPosition} from '../types/TPosition';
 import type {TDirection} from '../types/TDirection';
 import {updateRotationValueCos, updateRotationValueSin} from '../util/updateRotationValue';
-import {BASE_SPEED, PLAYER_WIDTH} from '../config/config';
+import {BASE_SPEED, FULL_TURNING_RADIUS } from '../config/config';
 import type {TControls} from '../types/TControls';
 
 export type PlayerArgs = {
     id: string;
     color: string;
-    startPosition: () => TPosition;
     controls: TControls;
 };
 
@@ -17,17 +16,14 @@ export class Player {
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
-    public getStartPosition: () => TPosition;
-    private startPos: TPosition;
-    private counter = 0;
+    public startPos: TPosition;
+    private directionControl = 0;
     private controls: TControls;
-    private lineDash = [120, 15];
     public path: Path2D;
 
     constructor(args: PlayerArgs) {
         this.id = args.id;
         this.color = args.color;
-        this.getStartPosition = args.startPosition;
         this.controls = args.controls;
 
         this.reset();
@@ -45,65 +41,33 @@ export class Player {
 
     public turn(keys: Set<string> | undefined) {
         if (keys?.has(this.controls.left)) {
-            this.counter -= 1;
+            this.directionControl = this.directionControl === 0 ? FULL_TURNING_RADIUS : this.directionControl - 1;
             this.updateDirection();
         }
         if (keys?.has(this.controls.right)) {
-            this.counter += 1;
+            this.directionControl = this.directionControl + 1 % FULL_TURNING_RADIUS;
             this.updateDirection();
         }
     }
 
     private updateDirection() {
-        this.direction.y = updateRotationValueSin(this.counter);
-        this.direction.x = updateRotationValueCos(this.counter + Math.PI);
+        this.direction.y = updateRotationValueCos(this.directionControl);
+        this.direction.x = updateRotationValueSin(this.directionControl);
     }
 
-    private redrawPreviousPositions(ctx: CanvasRenderingContext2D) {
-        // Redraw player path
-        ctx.moveTo(this.startPos.x, this.startPos.y);
-        ctx.beginPath();
-        ctx.setLineDash(this.lineDash);
-        ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2 * PLAYER_WIDTH;
-        ctx.lineCap = 'round';
-        ctx.stroke(this.path);
-        ctx.closePath();
+
+    public updatePath(points: TPosition) {
+        this.path.lineTo(points.x, points.y);
     }
 
-    public draw(ctx: CanvasRenderingContext2D) {
-        this.redrawPreviousPositions(ctx);
-
-        if (!this.isAlive) return;
-
-        ctx.beginPath();
-        ctx.fillStyle = this.color;
-        ctx.arc(
-            this.currentPosition.x,
-            this.currentPosition.y,
-            PLAYER_WIDTH,
-            0,
-            Math.PI * 2,
-            false,
-        );
-        ctx.fill();
-        ctx.closePath();
-    }
-
-    public updatePreviousPositions(ctx: CanvasRenderingContext2D) {
-        const newPoint = { x: this.currentPosition.x, y: this.currentPosition.y };
-
-        if (ctx.isPointInStroke(this.path, newPoint.x, newPoint.y)) {
-            return
-        }
-
-        this.path.lineTo(newPoint.x, newPoint.y);
-
+    public setStartPosition(startPosition: TPosition, directionControl: number) {
+        this.startPos = this.currentPosition = startPosition;
+        this.directionControl = directionControl;
+        this.updateDirection();
+        console.log(directionControl)
     }
 
     public reset() {
-        this.currentPosition = this.startPos = this.getStartPosition();
-        this.counter = Math.random() * 100;
         this.isAlive = true;
         this.updateDirection();
         this.path = new Path2D();

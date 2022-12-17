@@ -15,3 +15,5 @@ export const PLAYER_WIDTH = 2;
 export const PLAYER_COLORS = ['#ae3ec9', '#4263eb', '#0ca678', '#74b816', '#f59f00', '#f76707'];
 
 export const PLAYER_LINE_DASH = [120, 15];
+
+export const DEFAULT_CANVAS_SIZE = 500;

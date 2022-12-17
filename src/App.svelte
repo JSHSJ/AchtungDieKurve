@@ -1,27 +1,23 @@
 <script lang="ts">
-    import { PLAYER_COLORS } from "./config/config";
+    import {PLAYER_COLORS} from "./config/config";
     import logoSvg from './assets/logo.svg';
-    import { onMount } from "svelte";
-    import { Game } from "./Game/Game";
-    import { Player } from "./Player/Player";
-    import {calculateStartPosAndDirection} from "./util/calculateStartPosAndDirection";
+    import {onMount} from "svelte";
+    import {Game} from "./modules/Game/Game";
+    import {Player} from "./modules/Player/Player";
+    import {Canvas} from "./modules/Canvas/Canvas";
 
-    const DEFAULT_CANVAS_SIZE = 500;
 
     let game: Game;
     let players: Player[] = [];
-    let ctx: CanvasRenderingContext2D | undefined;
+    let canvas: Canvas;
 
     const startGame = () => {
         game.loop();
     };
 
     onMount(() => {
-        const canvas = document.querySelector('canvas');
-        ctx = canvas?.getContext('2d') || undefined;
-        if (!ctx) throw Error('Canvas context (ctx) is not defined');
-        ctx.canvas.width = canvas?.offsetWidth ?? DEFAULT_CANVAS_SIZE;
-        ctx.canvas.height = canvas?.offsetHeight ?? DEFAULT_CANVAS_SIZE;
+        const canvasElement = document.querySelector('canvas');
+        canvas = Canvas.init(canvasElement)
     })
 
     let numberOfPlayers = 2;
@@ -34,7 +30,6 @@
         const formElem = e.target as HTMLFormElement;
         const formData = new FormData(formElem);
 
-        console.log(formData.get(`player[0][color]`));
         if (game) {
             game.reset();
             startGame()
@@ -44,7 +39,6 @@
         Array(numberOfPlayers)
         .fill(0)
         .forEach((_player, idx) => {
-            const startParams = calculateStartPosAndDirection(ctx!.canvas.width, ctx!.canvas.height);
             const p = new Player({
                     id: formData.get(`player[${idx}][name]`) as string,
                     color: formData.get(`player[${idx}][color]`) as string,
@@ -53,17 +47,10 @@
                         right: formData.get(`player[${idx}][controls][right]`) as string,
                     },
                 })
-
-            p.setStartPosition({
-                x: startParams.startX,
-                y: startParams.startY,
-            }, startParams.direction)
-            players.push(
-                p
-            );
+            players.push(p)
         });
 
-        game = new Game(ctx!, players);
+        game = new Game(canvas, players);
         startGame();
     }
 </script>

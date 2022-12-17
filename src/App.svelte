@@ -38,6 +38,8 @@
         const formElem = e.target as HTMLFormElement;
         const formData = new FormData(formElem);
 
+        console.log(formData.get(`player[0][color]`));
+
         Array(numberOfPlayers)
         .fill(0)
         .forEach((_player, idx) => {
@@ -69,20 +71,20 @@
       <img class="logo" src={logoSvg} alt="Achtung die Kurve">
       <form on:submit|preventDefault={handleSubmit}>
           <div class="form-rows">
-            {#each Array(numberOfPlayers).fill(0) as player, idx}
+            {#each Array(numberOfPlayers).fill(0) as _player, idx}
               <fieldset class="player-row" name="player">
-                  <input type="color" name="player[${idx}][color]" bind:value={PLAYER_COLORS[idx]}>
+                  <input type="color" name="player[{idx}][color]" bind:value={PLAYER_COLORS[idx]}>
                   <div class="input-wrapper">
-                      <label for="player[${idx}][name]">Your name</label>
-                      <input id="player[${idx}][name]" type="text" required>
+                      <label for="player[{idx}][name]">Your name</label>
+                      <input id="player[{idx}][name]" type="text" required>
                   </div>
                   <div class="input-wrapper">
-                      <label for="player[${idx}][controls][left]">Left</label>
-                      <input name="player[${idx}][controls][left]" type="text" maxlength="1" required>
+                      <label for="player[{idx}][controls][left]">Left</label>
+                      <input name="player[{idx}][controls][left]" type="text" maxlength="1" required>
                   </div>
                   <div class="input-wrapper">
-                      <label for="player[${idx}][controls][right]">Right</label>
-                      <input name="player[${idx}][controls][right]" type="text" maxlength="1" required>
+                      <label for="player[{idx}][controls][right]">Right</label>
+                      <input name="player[{idx}][controls][right]" type="text" maxlength="1" required>
                   </div>
               </fieldset>
             {/each}

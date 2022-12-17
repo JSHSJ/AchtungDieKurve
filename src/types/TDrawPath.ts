@@ -1,4 +1,4 @@
-import { TPosition } from './TPosition';
+import type { TPosition } from './TPosition';
 
 export enum TDrawPathTypes {
     Tunnel = 0,

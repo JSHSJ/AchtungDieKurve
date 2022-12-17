@@ -1,10 +1,10 @@
-import { TPosition } from '../types/TPosition';
-import { TDirection } from '../types/TDirection';
+import type { TPosition } from '../types/TPosition';
+import type { TDirection } from '../types/TDirection';
 import { updateRotationValueCos, updateRotationValueSin } from '../util/updateRotationValue';
 import { BASE_SPEED, LINE_FRAMES, PLAYER_WIDTH, TUNNEL_FRAMES } from '../config/config';
-import { TControls } from '../types/TControls';
+import type { TControls } from '../types/TControls';
 import { doPointsIntersect } from '../util/doPointsIntersect';
-import { TDrawPath, TDrawPathTypes } from '../types/TDrawPath';
+import { TDrawPathTypes, type TDrawPath } from '../types/TDrawPath';
 
 export type PlayerArgs = {
     id: string;

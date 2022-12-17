@@ -71,7 +71,7 @@
           <div class="form-rows">
             {#each Array(numberOfPlayers).fill(0) as player, idx}
               <fieldset class="player-row" name="player">
-                  <input type="color" name="player[${idx}][color]" value="${PLAYER_COLORS[idx]}">
+                  <input type="color" name="player[${idx}][color]" bind:value={PLAYER_COLORS[idx]}>
                   <div class="input-wrapper">
                       <label for="player[${idx}][name]">Your name</label>
                       <input id="player[${idx}][name]" type="text" required>

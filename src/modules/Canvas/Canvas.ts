@@ -63,10 +63,24 @@ export class Canvas {
         this.ctx.clearRect(0, 0, this.width, this.height);
     };
 
-    public drawWinner(winner?: Player) {
+    public drawRoundOver(winner?: Player) {
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
+        // @TODO: improve this design and color
         this.ctx.fillStyle = winner.color || 'red';
+        this.ctx.font = '30px Arial';
+        this.ctx.fillText('ROUND OVER', midX - 30, midY + 120);
+        if (winner) {
+            this.ctx.fillText('WINNER', midX + 10, midY + 160);
+        }
+        this.ctx.font = '20px Arial';
+        this.ctx.fillText('- Press space to start the next round - ', midX - 100, midY + 200);
+    }
+
+    public drawWinner(winner: Player) {
+        const midX = this.width / 2 - 75;
+        const midY = this.height / 2 - 120;
+        this.ctx.fillStyle = winner.color;
         this.ctx.beginPath();
         this.ctx.moveTo(midX + 75, midY + 40);
         this.ctx.bezierCurveTo(midX + 75, midY + 37, midX + 70, midY + 25, midX + 50, midY + 25);
@@ -97,9 +111,8 @@ export class Canvas {
         );
         this.ctx.bezierCurveTo(midX + 85, midY + 25, midX + 75, midY + 37, midX + 75, midY + 40);
         this.ctx.fill();
+        // @TODO: change font
         this.ctx.font = '30px Arial';
-        if (winner) {
-            this.ctx.fillText('WINNER', midX + 10, midY + 160);
-        }
+        this.ctx.fillText('WINNER', midX + 10, midY + 160);
     }
 }

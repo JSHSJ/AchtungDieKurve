@@ -11,10 +11,6 @@
     let players: Player[] = [];
     let canvas: Canvas;
 
-    const startGame = () => {
-        game.loop();
-    };
-
     onMount(() => {
         const canvasElement = document.querySelector('canvas');
         canvas = Canvas.init(canvasElement)
@@ -32,7 +28,7 @@
 
         if (game) {
             game.reset();
-            startGame()
+            game.start()
             return
         }
 
@@ -51,7 +47,7 @@
         });
 
         game = new Game(canvas, players);
-        startGame();
+        game.start();
     }
 </script>
 

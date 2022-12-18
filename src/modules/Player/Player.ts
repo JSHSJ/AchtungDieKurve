@@ -20,6 +20,7 @@ export class Player {
     private directionControl = 0;
     private controls: TControls;
     public path: Path2D;
+    public points: number = 0;
 
     constructor(args: PlayerArgs) {
         this.id = args.id;
@@ -41,12 +42,13 @@ export class Player {
 
     public turn(keys: Set<string> | undefined) {
         if (keys?.has(this.controls.left)) {
-            this.directionControl =
-                this.directionControl === 0 ? FULL_TURNING_RADIUS : this.directionControl - 1;
+            this.directionControl = this.directionControl + (1 % FULL_TURNING_RADIUS);
+
             this.updateDirection();
         }
         if (keys?.has(this.controls.right)) {
-            this.directionControl = this.directionControl + (1 % FULL_TURNING_RADIUS);
+            this.directionControl =
+                this.directionControl === 0 ? FULL_TURNING_RADIUS : this.directionControl - 1;
             this.updateDirection();
         }
     }
@@ -67,8 +69,17 @@ export class Player {
     }
 
     public reset() {
+        this.resetStartPosition();
+        this.points = 0;
+    }
+
+    public resetStartPosition() {
         this.isAlive = true;
         this.updateDirection();
         this.path = new Path2D();
+    }
+
+    public addPoints(points: number) {
+        this.points += points;
     }
 }

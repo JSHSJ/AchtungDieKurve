@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { Game } from "../../Game/Game";
-    import type { Player } from "../../Player/Player";
+    import { Game } from "../../modules/Game/Game";
+    import type { Player } from "../../modules/Player/Player";
 
     const DEFAULT_CANVAS_SIZE = 500;
 

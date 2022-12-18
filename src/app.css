@@ -3,22 +3,34 @@
 @import "open-props/postcss/buttons";
 
 main {
+    --size-minified-aside: var(--size-fluid-7);
+    --size-base: var(--size-fluid-2);
     inline-size: 100%;
     block-size: 100vh;
     display: grid;
-    padding: var(--size-3);
-    gap: var(--size-3);
-    grid:
-        'canvas menu' 1fr
-        / auto 1fr;
+    gap: var(--size-base);
+    grid: [main] 1fr
+    / [main-start] 11fr [aside-expanded-start] max-content [main-end aside] var(--size-minified-aside) [aside-expanded-end];
 
     & > * {
         min-inline-size: 0;
     }
+
+    /* @media (--md-n-above) {
+        & > :is(section, aside) {
+            grid-area: stack;
+        }
+    } */
 }
 
-.canvas-wrapper {
-    grid-area: canvas;
+h1 {
+    font-size: var(--font-size-fluid-1);
+}
+
+section {
+    background: red; /* @todo for debugging. remove afterwards */
+    grid-area: main / main-start / main / main-end;
+    /* padding: var(--size-base); */
 }
 
 .logo {
@@ -26,53 +38,80 @@ main {
     display: block;
     max-width: 100%;
     color: var(--text-2);
-    padding: var(--size-3);
+    padding: var(--size-base);
 }
 
 canvas {
     block-size: 100%;
     aspect-ratio: 1/1;
     background-color: var(--surface-1);
-    border: 1px solid var(--surface-4);
+    /* border: 1px solid var(--surface-4); */
     box-shadow: var(--inner-shadow-4);
 }
 
 aside {
-    grid-area: menu;
-    padding: var(--size-3);
+    grid-area: main / aside-expanded-start / main / aside-expanded-end;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-inline-size: 0;
+    min-block-size: 0;
+    background-color: var(--surface-1);
+    border-inline-start: var(--border-size-1) solid var(--surface-4);
+
+    & > * {
+        min-block-size: 0;
+    }
+}
+
+header {
+    padding: var(--size-base);
+}
+
+form {
+    overflow-y: auto;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto var(--size-minified-aside);
+    align-items: end;
+    gap: calc(var(--size-base) / 2);
+    border-radius: 0;
+    border: 0;
+    border-block-start: var(--border-size-1) solid var(--surface-4);
+    padding: var(--size-base);
+
+    & [name*="controls"] {
+        inline-size: var(--size-9);
+    }
+
+    &:last-child {
+        border-block-end: var(--border-size-1) solid var(--surface-4);
+    }
+
+    & .score {
+        align-self: stretch;
+        display: grid;
+        place-items: center;
+    }
 }
 
 .input-wrapper {
     display: grid;
 }
 
-.form-rows {
-    display: grid;
-    gap: var(--size-2);
+.action-bar {
+    display: flex;
+    border-block-start: var(--border-size-1) solid var(--surface-4);
 }
 
-.player-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: end;
-    gap: var(--size-3);
-    padding: var(--size-3);
-
-    /* & > * {
-        min-inline-size: 0;
-    } */
-
-    & [type="color"] {
-        /* block-size: 100%; */
-    }
-
-    & [name*="controls"] {
-        inline-size: var(--size-9);
-    }
+.add, .start {
+    inline-size: 100%;
+    border-radius: 0;
+    border: 0;
+    padding: var(--size-base);
 }
 
-.add {
-    border-radius: var(--radius-2);
-    border: var(--border-size-1) solid var(--surface-4);
-    padding: var(--size-3);
+.start {
+    border-inline-start: var(--border-size-1) solid var(--surface-4);
 }

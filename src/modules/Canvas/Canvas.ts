@@ -67,7 +67,7 @@ export class Canvas {
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
         // @TODO: improve this design and color
-        this.ctx.fillStyle = winner.color || 'red';
+        this.ctx.fillStyle = winner?.color || 'red';
         this.ctx.font = '30px Arial';
         this.ctx.fillText('ROUND OVER', midX - 30, midY + 120);
         if (winner) {
@@ -78,6 +78,7 @@ export class Canvas {
     }
 
     public drawWinner(winner: Player) {
+        this.clear();
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
         this.ctx.fillStyle = winner.color;

@@ -46,7 +46,6 @@
             ...playersData,
             structuredClone(initPlayer(PLAYER_COLORS[playersData.length])),
         ];
-        console.log(playersData);
     }
 
     function handleSubmit(e: SubmitEvent) {

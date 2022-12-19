@@ -8,6 +8,7 @@
     import type { TControls } from './types/TControls';
 
     let isOpen = true;
+    let disabled = false;
 
     type PlayerData = {
         id: string;
@@ -49,7 +50,8 @@
     }
 
     function handleSubmit(e: SubmitEvent) {
-        console.log('submit');
+        isOpen = false;
+        disabled = true;
 
         const formElem = e.target as HTMLFormElement;
         const formData = new FormData(formElem);
@@ -88,10 +90,10 @@
                 {totalScore}
             </div>
         </header>
-        <form on:submit|preventDefault={handleSubmit} name="main">
+        <form on:submit|preventDefault={handleSubmit} id="main">
             {#each playersData as player, idx}
                 <div class="player-row">
-                    <fieldset name="player">
+                    <fieldset name="player" {disabled}>
                         <input type="color" name="player[{idx}][color]" bind:value={player.color} />
                         <div class="input-wrapper">
                             <label for="player[{idx}][name]">Your name</label>

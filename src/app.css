@@ -54,7 +54,7 @@ aside {
     will-change: transform;
     transform: translateX(0%);
 
-    &[data-is-open="false"]:not(:focus-within) {
+    &:not(.isOpen):not(:focus-within) {
         transform: translateX(0%);
         & :is(:--min-aside) {
             grid-area: stack;

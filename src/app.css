@@ -54,15 +54,15 @@ aside {
     will-change: transform;
     transform: translateX(0%);
 
+    & > * {
+        min-block-size: 0;
+    }
+
     &:not(.isOpen):not(:focus-within) {
         transform: translateX(0%);
         & :is(:--min-aside) {
             grid-area: stack;
         }
-    }
-
-    & > * {
-        min-block-size: 0;
     }
 }
 
@@ -176,4 +176,9 @@ fieldset, .score {
 
 .start {
     border-inline-start: var(--border-size-1) solid var(--surface-4);
+}
+
+.toggle {
+    position: relative;
+    z-index: 2;
 }

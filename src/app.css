@@ -2,16 +2,17 @@
 @import "open-props/postcss/normalize";
 @import "open-props/postcss/buttons";
 
+@custom-selector :--min-aside fieldset, .score, .action-main, .toggle, h1, .total-score;
+
 main {
     --size-base: var(--size-fluid-2);
     --size-minified-aside: var(--size-fluid-7);
     --padding-minified-aside: calc(var(--size-base) * 1.5);
-    --block-size-player-row: var(--size-11);
     inline-size: 100%;
     block-size: 100vh;
     display: grid;
     grid: [main aside score-board] 1fr
-    / [main-start] 11fr [aside] max-content [main-end score-board] var(--size-minified-aside);
+    / [main-start] 11fr [aside-start] max-content [main-end score-board] var(--size-minified-aside) [aside-end];
 
     & > * {
         min-inline-size: 0;
@@ -24,21 +25,9 @@ main {
     } */
 }
 
-h1 {
-    font-size: var(--font-size-fluid-1);
-}
-
 section {
     grid-row: main;
     grid-column: main-start / main-end;
-}
-
-.logo {
-    width: 100%;
-    display: block;
-    max-width: 100%;
-    color: var(--text-2);
-    padding: var(--size-base);
 }
 
 canvas {
@@ -50,9 +39,12 @@ canvas {
 }
 
 aside {
-    grid-area: aside;
+    grid-row: aside;
+    grid-column: aside-start / aside-end;
+
     display: grid;
     grid-template-rows: auto 1fr auto;
+
     min-inline-size: 0;
     min-block-size: 0;
     background-color: var(--surface-1);
@@ -60,10 +52,13 @@ aside {
 
     transition: transform 0.3s ease;
     will-change: transform;
-    transform: translateX(100%);
+    transform: translateX(0%);
 
-    &[data-is-open="true"], &:focus-within {
+    &[data-is-open="false"]:not(:focus-within) {
         transform: translateX(0%);
+        & :is(:--min-aside) {
+            grid-area: stack;
+        }
     }
 
     & > * {
@@ -71,8 +66,10 @@ aside {
     }
 }
 
-form {
-    overflow-y: auto;
+/* ---------- HEADER ---------- */
+header {
+    display: grid;
+    grid-template-columns: 1fr [stack] var(--size-minified-aside);
 }
 
 h1 {
@@ -80,6 +77,29 @@ h1 {
     font-weight: inherit;
     line-height: inherit;
     text-align: left;
+    white-space: nowrap;
+}
+
+h1, .total-score {
+    padding: var(--size-base);
+    font-weight: var(--font-weight-6);
+    font-size: var(--font-size-fluid-1);
+    line-height: var(--font-lineheight-1);
+    text-align: center;
+}
+
+.total-score {
+    background-color: var(--surface-1);
+}
+
+/* ---------- PLAYERS FORM ---------- */
+form {
+    overflow-y: auto;
+}
+
+.player-row {
+    display: grid;
+    grid-template-columns: max-content [stack] var(--size-minified-aside);
 }
 
 fieldset {
@@ -104,50 +124,11 @@ fieldset {
     display: grid;
 }
 
-.action-bar {
-    display: flex;
-    border-block-start: var(--border-size-1) solid var(--surface-4);
-}
-
-.add, .start {
-    inline-size: 100%;
-    border-radius: 0;
-    border: 0;
-    padding: var(--size-base);
-}
-
-.start {
-    border-inline-start: var(--border-size-1) solid var(--surface-4);
-}
-
-.score-board {
-    grid-area: score-board;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-    background-color: var(--surface-1);
-    border-inline-start: var(--border-size-1) solid var(--surface-4);
-
-    & > * {
-        min-inline-size: 0;
-        min-block-size: 0;
-    }
-}
-
-header, .total-score {
-    padding: var(--size-base);
-    font-weight: var(--font-weight-6);
-    font-size: var(--font-size-fluid-1);
-    line-height: var(--font-lineheight-1);
-    text-align: center;
-}
-
 .score {
     display: grid;
     place-items: center;
     inline-size: 100%;
+    background-color: var(--surface-1);
 
     & > span {
         margin-block-start: var(--size-1);
@@ -165,11 +146,34 @@ header, .total-score {
 }
 
 fieldset, .score {
-    block-size: var(--block-size-player-row);
-    padding: var(--size-base);
+    padding-inline: var(--size-base);
+    padding-block: calc(var(--size-base) / 2);
     border-block-start: var(--border-size-1) solid var(--surface-4);
 
-    &:last-child {
+    &:last-of-type {
         border-block-end: var(--border-size-1) solid var(--surface-4);
     }
+}
+
+/* ---------- ACTION BAR ---------- */
+.action-bar {
+    display: grid;
+    grid-template-columns: 1fr [stack] var(--size-minified-aside);
+
+    border-block-start: var(--border-size-1) solid var(--surface-4);
+
+    & button {
+        inline-size: 100%;
+        border-radius: 0;
+        border: 0;
+        padding: var(--size-base);
+    }
+}
+
+.action-main {
+    display: flex;
+}
+
+.start {
+    border-inline-start: var(--border-size-1) solid var(--surface-4);
 }

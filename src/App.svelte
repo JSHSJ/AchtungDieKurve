@@ -49,6 +49,8 @@
     }
 
     function handleSubmit(e: SubmitEvent) {
+        console.log('submit');
+
         const formElem = e.target as HTMLFormElement;
         const formData = new FormData(formElem);
 
@@ -58,19 +60,17 @@
             return;
         }
 
-        Array(numberOfPlayers)
-            .fill(0)
-            .forEach((_player, idx) => {
-                const p = new Player({
-                    id: formData.get(`player[${idx}][name]`) as string,
-                    color: formData.get(`player[${idx}][color]`) as string,
-                    controls: {
-                        left: formData.get(`player[${idx}][controls][left]`) as string,
-                        right: formData.get(`player[${idx}][controls][right]`) as string,
-                    },
-                });
-                players.push(p);
+        playersData.forEach((_player, idx) => {
+            const p = new Player({
+                id: formData.get(`player[${idx}][name]`) as string,
+                color: formData.get(`player[${idx}][color]`) as string,
+                controls: {
+                    left: formData.get(`player[${idx}][controls][left]`) as string,
+                    right: formData.get(`player[${idx}][controls][right]`) as string,
+                },
             });
+            players.push(p);
+        });
 
         game = new Game(canvas, players);
         game.start();
@@ -136,13 +136,10 @@
         <div class="action-bar">
             <div class="action-main">
                 <button type="button" class="add" on:click={addPlayerRow}> Add Player</button>
-                <button class="start" form="main" type="submit">Start</button>
+                <button type="submit" class="start" form="main">Start</button>
             </div>
-            <button
-                on:click={() => (isOpen = !isOpen)}
-                class="toggle"
-                type="button"
-                tabindex="0">Toggle</button
+            <button type="button" class="toggle" on:click={() => (isOpen = !isOpen)} tabindex="0"
+                >Toggle</button
             >
         </div>
     </aside>

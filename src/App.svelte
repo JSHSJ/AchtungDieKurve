@@ -82,19 +82,7 @@
     <section>
         <canvas />
     </section>
-    <!-- <div
-        role="button"
-        type="button"
-        class="score-board"
-        tabindex="0"
-        on:click={() => isOpen = !isOpen}
-        on:keydown={() => isOpen = !isOpen}
-    >
-        <div class="total-score">
-            {totalScore}
-        </div>
-    </div> -->
-    <aside data-is-open={isOpen}>
+    <aside class:isOpen>
         <header>
             <h1>Achtung die Kurve</h1>
             <div class="total-score">

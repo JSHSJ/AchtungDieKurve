@@ -163,6 +163,7 @@ fieldset, .score {
 .action-bar {
     display: grid;
     grid-template-columns: 1fr [stack] var(--size-minified-aside);
+    white-space: nowrap;
 
     border-block-start: var(--border-size-1) solid var(--surface-4);
 

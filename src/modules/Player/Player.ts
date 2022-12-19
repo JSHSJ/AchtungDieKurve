@@ -7,11 +7,13 @@ import type { TControls } from '../../types/TControls';
 export type PlayerArgs = {
     id: string;
     color: string;
+    name: string;
     controls: TControls;
 };
 
 export class Player {
     public id: string;
+    public name: string;
     public isAlive: boolean;
     public color: string;
     private direction: TDirection = { x: 0, y: -1 };
@@ -22,11 +24,20 @@ export class Player {
     public path: Path2D;
     public points: number = 0;
 
+    /**
+     * Don't use this method to create new player, use static method createPlayerStub instead
+     */
     constructor(args: PlayerArgs) {
         this.id = args.id;
         this.color = args.color;
         this.controls = args.controls;
+    }
 
+    public static createPlayerStub(): Player {
+        return new Player({ id: '', color: 'black', controls: { left: '', right: '' }, name: '' });
+    }
+
+    public init() {
         this.reset();
     }
 
@@ -81,5 +92,6 @@ export class Player {
 
     public addPoints(points: number) {
         this.points += points;
+        console.log('points', this.points, this.name);
     }
 }

@@ -1,38 +1,29 @@
 <script lang="ts">
-    import { PLAYER_COLORS } from './config/config';
-    import { onMount } from 'svelte';
-    import { Game } from './modules/Game/Game';
-    import { Player } from './modules/Player/Player';
-    import { Canvas } from './modules/Canvas/Canvas';
-    import Score from './lib/score/Score.svelte';
-    import type { TControls } from './types/TControls';
+    import {PLAYER_COLORS} from './config/config';
+    import {onMount} from 'svelte';
+    import {Game} from './modules/Game/Game';
+    import {Player} from './modules/Player/Player';
+    import {Canvas} from './modules/Canvas/Canvas';
+    import Score from "./lib/score/Score.svelte";
 
     let isOpen = true;
     let disabled = false;
 
-    type PlayerData = {
-        id: string;
-        name: string;
-        controls: TControls;
-        color: string;
-    };
-
     let game: Game;
-    let players: Player[] = [];
     let canvas: Canvas;
     let totalScore: number = 120;
 
-    const initPlayer: (initColor: PlayerData['color']) => PlayerData = (initColor) => ({
-        id: '',
-        name: '',
-        controls: { left: '', right: '' },
-        color: initColor,
-    });
+    const initPlayer: (initColor: Player['color']) => Player = (initColor) => {
+        const player = Player.createPlayerStub()
+        player.color = initColor;
+        return player
+    }
 
-    $: playersData = <PlayerData[]>[
-        structuredClone(initPlayer(PLAYER_COLORS[0])),
-        structuredClone(initPlayer(PLAYER_COLORS[1])),
+    $: players = <Player[]>[
+        initPlayer(PLAYER_COLORS[0]),
+        initPlayer(PLAYER_COLORS[1]),
     ];
+
 
     onMount(() => {
         const canvasElement = document.querySelector('canvas');
@@ -43,9 +34,9 @@
 
     function addPlayerRow() {
         numberOfPlayers += 1;
-        playersData = [
-            ...playersData,
-            structuredClone(initPlayer(PLAYER_COLORS[playersData.length])),
+        players = [
+            ...players,
+            initPlayer(PLAYER_COLORS[players.length]),
         ];
     }
 
@@ -62,17 +53,11 @@
             return;
         }
 
-        playersData.forEach((_player, idx) => {
-            const p = new Player({
-                id: formData.get(`player[${idx}][name]`) as string,
-                color: formData.get(`player[${idx}][color]`) as string,
-                controls: {
-                    left: formData.get(`player[${idx}][controls][left]`) as string,
-                    right: formData.get(`player[${idx}][controls][right]`) as string,
-                },
-            });
-            players.push(p);
-        });
+        players.forEach((player: Player, idx) => {
+            player.init();
+        })
+
+        console.log(players)
 
         game = new Game(canvas, players);
         game.start();
@@ -91,7 +76,7 @@
             </div>
         </header>
         <form on:submit|preventDefault={handleSubmit} id="main">
-            {#each playersData as player, idx}
+            {#each players as player, idx}
                 <div class="player-row">
                     <fieldset name="player" {disabled}>
                         <input type="color" name="player[{idx}][color]" bind:value={player.color} />
@@ -129,7 +114,7 @@
                         </div>
                     </fieldset>
                     <div class="score">
-                        <Score score={0} {totalScore} color={PLAYER_COLORS[idx]} />
+                        <Score score={player.points} {totalScore} color={PLAYER_COLORS[idx]} />
                         <span>{player.name}</span>
                     </div>
                 </div>

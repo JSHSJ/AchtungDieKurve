@@ -1,7 +1,6 @@
 import type { Canvas } from '../Canvas/Canvas';
 import type { Player } from '../Player/Player';
 import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
-import { PLAYER_WIDTH } from '../../config/config';
 import type { RoundEvent } from './Round.types';
 import { RoundEventTypes, RoundState } from './Round.types';
 
@@ -80,37 +79,12 @@ export class Round {
         }
     }
 
-    // @TODO: I don't like this method here, but I don't know where to put it
     public checkCollisions() {
         this.players.forEach((player) => {
-            if (this.didPlayerCollide(player)) {
+            if (this.canvas.didPlayerCollide(player, this.players)) {
                 player.die();
             }
         });
-    }
-
-    public didPlayerCollide(player: Player): boolean {
-        // player collides with game boundaries
-        if (
-            player.currentPosition.x - PLAYER_WIDTH <= 0 ||
-            player.currentPosition.x + PLAYER_WIDTH >= this.canvas.width ||
-            player.currentPosition.y - PLAYER_WIDTH <= 0 ||
-            player.currentPosition.y + PLAYER_WIDTH >= this.canvas.height
-        ) {
-            return true;
-        }
-
-        // player collides with other players
-        for (const otherPlayer of this.players) {
-            if (
-                // reduce line with to prevent self collision
-                this.canvas.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, 1)
-            ) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private updatePlayerPath = (player: Player) => {

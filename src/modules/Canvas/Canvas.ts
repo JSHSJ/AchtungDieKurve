@@ -116,4 +116,28 @@ export class Canvas {
         this.ctx.font = '30px Arial';
         this.ctx.fillText('WINNER', midX + 10, midY + 160);
     }
+
+    public didPlayerCollide(player: Player, otherPlayers: Player[]): boolean {
+        // player collides with game boundaries
+        if (
+            player.currentPosition.x - PLAYER_WIDTH <= 0 ||
+            player.currentPosition.x + PLAYER_WIDTH >= this.width ||
+            player.currentPosition.y - PLAYER_WIDTH <= 0 ||
+            player.currentPosition.y + PLAYER_WIDTH >= this.height
+        ) {
+            return true;
+        }
+
+        // player collides with other players
+        for (const otherPlayer of otherPlayers) {
+            if (
+                // reduce line with to prevent self collision
+                this.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, 1)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

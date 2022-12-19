@@ -100,6 +100,11 @@ form {
 .player-row {
     display: grid;
     grid-template-columns: max-content [stack] var(--size-minified-aside);
+    border-block-start: var(--border-size-1) solid var(--surface-4);
+
+    &:last-child {
+        border-block-end: var(--border-size-1) solid var(--surface-4);
+    }
 }
 
 fieldset {
@@ -148,11 +153,6 @@ fieldset {
 fieldset, .score {
     padding-inline: var(--size-base);
     padding-block: calc(var(--size-base) / 2);
-    border-block-start: var(--border-size-1) solid var(--surface-4);
-
-    &:last-of-type {
-        border-block-end: var(--border-size-1) solid var(--surface-4);
-    }
 }
 
 /* ---------- ACTION BAR ---------- */

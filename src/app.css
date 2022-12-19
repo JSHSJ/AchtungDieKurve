@@ -58,11 +58,15 @@ aside {
         min-block-size: 0;
     }
 
-    &:not(.isOpen):not(:focus-within) {
+    &:not(.isOpen) {
         transform: translateX(0%);
         & :is(:--min-aside) {
             grid-area: stack;
         }
+    }
+
+    &:focus-within:not(:has(.toggle:focus)) :is(:--min-aside) {
+        grid-area: revert;
     }
 }
 

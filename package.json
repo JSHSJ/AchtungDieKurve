@@ -10,16 +10,18 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json"
+        "check": "svelte-check --tsconfig ./tsconfig.json",
+        "prettier": "prettier --write ."
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.0.1",
         "@tsconfig/svelte": "^3.0.0",
         "@types/postcss-preset-env": "^7.7.0",
         "postcss-preset-env": "7.8.3",
+        "prettier": "^2.8.1",
+        "prettier-plugin-svelte": "^2.9.0",
         "svelte": "^3.54.0",
         "svelte-check": "^2.10.2",
-        "prettier": "^2.8.1",
         "typescript": "^4.9.3",
         "vite": "^4.0.0"
     },

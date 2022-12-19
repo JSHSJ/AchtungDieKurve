@@ -1,6 +1,6 @@
-@import "open-props/postcss/style";
-@import "open-props/postcss/normalize";
-@import "open-props/postcss/buttons";
+@import 'open-props/postcss/style';
+@import 'open-props/postcss/normalize';
+@import 'open-props/postcss/buttons';
 
 @custom-selector :--min-aside fieldset, .score, .action-main, .toggle, h1, .total-score;
 
@@ -11,8 +11,11 @@ main {
     inline-size: 100%;
     block-size: 100vh;
     display: grid;
-    grid: [main aside score-board] 1fr
-    / [main-start] 11fr [aside-start] max-content [main-end score-board] var(--size-minified-aside) [aside-end];
+    grid:
+        [main aside score-board] 1fr
+        / [main-start] 11fr [aside-start] max-content [main-end score-board] var(
+            --size-minified-aside
+        ) [aside-end];
 
     & > * {
         min-inline-size: 0;
@@ -84,7 +87,8 @@ h1 {
     white-space: nowrap;
 }
 
-h1, .total-score {
+h1,
+.total-score {
     padding: var(--size-base);
     font-weight: var(--font-weight-6);
     font-size: var(--font-size-fluid-1);
@@ -119,12 +123,12 @@ fieldset {
     border-radius: 0;
     border: 0;
 
-    & [name*="color"] {
+    & [name*='color'] {
         margin-block-start: var(--size-5);
         block-size: var(--size-7);
     }
 
-    & [name*="controls"] {
+    & [name*='controls'] {
         inline-size: var(--size-9);
     }
 }
@@ -154,7 +158,8 @@ fieldset {
     }
 }
 
-fieldset, .score {
+fieldset,
+.score {
     padding-inline: var(--size-base);
     padding-block: calc(var(--size-base) / 2);
 }

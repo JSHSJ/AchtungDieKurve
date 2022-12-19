@@ -1,4 +1,4 @@
-import {FULL_TURNING_RADIUS} from "../config/config";
+import { FULL_TURNING_RADIUS } from '../config/config';
 
 enum DirectionFactor {
     LEFT = 0.75,
@@ -9,18 +9,23 @@ enum DirectionFactor {
 
 export const calculateStartPosAndDirection = (width: number, height: number) => {
     const minDistance = width / 10;
-        const startX = Math.random() * (width - minDistance * 2) + minDistance;
-        const startY = Math.random() * (height - minDistance) + minDistance;
-        const direction = getUsefulDirectionControl(startX, startY, width, height);
+    const startX = Math.random() * (width - minDistance * 2) + minDistance;
+    const startY = Math.random() * (height - minDistance) + minDistance;
+    const direction = getUsefulDirectionControl(startX, startY, width, height);
 
-        return {
-            startX,
-            startY,
-            direction,
-        }
-}
+    return {
+        startX,
+        startY,
+        direction,
+    };
+};
 
-const getUsefulDirectionControl = (startX: number, startY: number, width: number, height: number) => {
+const getUsefulDirectionControl = (
+    startX: number,
+    startY: number,
+    width: number,
+    height: number,
+) => {
     const centerX = width / 2;
     const centerY = height / 2;
     const deltaX = startX - centerX;
@@ -30,7 +35,7 @@ const getUsefulDirectionControl = (startX: number, startY: number, width: number
     const maxFactor = getMaximumDirectionFactor(deltaX, deltaY) * FULL_TURNING_RADIUS;
 
     return Math.random() * (maxFactor - minFactor) + minFactor;
-}
+};
 
 const getMinimumDirectionFactor = (deltaX: number, deltaY: number) => {
     if (deltaY > 0) {
@@ -48,9 +53,8 @@ const getMinimumDirectionFactor = (deltaX: number, deltaY: number) => {
     }
 
     // top right
-    return DirectionFactor.LEFT
-}
-
+    return DirectionFactor.LEFT;
+};
 
 const getMaximumDirectionFactor = (deltaX: number, deltaY: number) => {
     if (deltaY > 0) {
@@ -68,6 +72,5 @@ const getMaximumDirectionFactor = (deltaX: number, deltaY: number) => {
     }
 
     // top right
-    return DirectionFactor.DOWN
-}
-
+    return DirectionFactor.DOWN;
+};

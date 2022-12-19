@@ -138,9 +138,14 @@
                 <button type="button" class="add" on:click={addPlayerRow}> Add Player</button>
                 <button type="submit" class="start" form="main">Start</button>
             </div>
-            <button type="button" class="toggle" on:click={() => (isOpen = !isOpen)} tabindex="0"
-                >Toggle</button
+            <button
+                type="button"
+                class="toggle"
+                on:click={() => (isOpen = !isOpen)}
+                tabindex="0"
             >
+                Toggle
+            </button>
         </div>
     </aside>
 </main>

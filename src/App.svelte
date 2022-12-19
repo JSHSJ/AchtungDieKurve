@@ -46,7 +46,7 @@
             ...playersData,
             structuredClone(initPlayer(PLAYER_COLORS[playersData.length])),
         ];
-        console.log(playersData)
+        console.log(playersData);
     }
 
     function handleSubmit(e: SubmitEvent) {
@@ -82,7 +82,7 @@
     <section>
         <canvas />
     </section>
-    <div
+    <!-- <div
         role="button"
         type="button"
         class="score-board"
@@ -93,65 +93,70 @@
         <div class="total-score">
             {totalScore}
         </div>
-        <div>
-            {#each playersData as player, idx}
-                <div class="score">
-                    <Score score={0} {totalScore} color={PLAYER_COLORS[idx]} />
-                    <span>{player.name}</span>
-                </div>
-            {/each}
-        </div>
-    </div>
+    </div> -->
     <aside data-is-open={isOpen}>
         <header>
             <h1>Achtung die Kurve</h1>
+            <div class="total-score">
+                {totalScore}
+            </div>
         </header>
         <form on:submit|preventDefault={handleSubmit} name="main">
             {#each playersData as player, idx}
-                <fieldset name="player">
-                    <input
-                        type="color"
-                        name="player[{idx}][color]"
-                        bind:value={player.color}
-                    />
-                    <div class="input-wrapper">
-                        <label for="player[{idx}][name]">Your name</label>
-                        <input
-                            type="text"
-                            required
-                            name="player[{idx}][name]"
-                            id="player[{idx}][name]"
-                            bind:value={player.name}
-                        />
+                <div class="player-row">
+                    <fieldset name="player">
+                        <input type="color" name="player[{idx}][color]" bind:value={player.color} />
+                        <div class="input-wrapper">
+                            <label for="player[{idx}][name]">Your name</label>
+                            <input
+                                type="text"
+                                required
+                                name="player[{idx}][name]"
+                                id="player[{idx}][name]"
+                                bind:value={player.name}
+                            />
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="player[{idx}][controls][left]">Left</label>
+                            <input
+                                type="text"
+                                name="player[{idx}][controls][left]"
+                                id="player[{idx}][controls][left]"
+                                maxlength="1"
+                                required
+                                bind:value={player.controls.left}
+                            />
+                        </div>
+                        <div class="input-wrapper">
+                            <label for="player[{idx}][controls][right]">Right</label>
+                            <input
+                                name="player[{idx}][controls][right]"
+                                id="player[{idx}][controls][right]"
+                                type="text"
+                                maxlength="1"
+                                required
+                                bind:value={player.controls.right}
+                            />
+                        </div>
+                    </fieldset>
+                    <div class="score">
+                        <Score score={0} {totalScore} color={PLAYER_COLORS[idx]} />
+                        <span>{player.name}</span>
                     </div>
-                    <div class="input-wrapper">
-                        <label for="player[{idx}][controls][left]">Left</label>
-                        <input
-                            type="text"
-                            name="player[{idx}][controls][left]"
-                            id="player[{idx}][controls][left]"
-                            maxlength="1"
-                            required
-                            bind:value={player.controls.left}
-                        />
-                    </div>
-                    <div class="input-wrapper">
-                        <label for="player[{idx}][controls][right]">Right</label>
-                        <input
-                            name="player[{idx}][controls][right]"
-                            id="player[{idx}][controls][right]"
-                            type="text"
-                            maxlength="1"
-                            required
-                            bind:value={player.controls.right}
-                        />
-                    </div>
-                </fieldset>
+                </div>
             {/each}
         </form>
         <div class="action-bar">
-            <button type="button" class="add" on:click={addPlayerRow}> Add Player</button>
-            <button class="start" form="main" type="submit">Start</button>
+            <div class="action-main">
+                <button type="button" class="add" on:click={addPlayerRow}> Add Player</button>
+                <button class="start" form="main" type="submit">Start</button>
+            </div>
+            <button
+                on:click={() => (isOpen = !isOpen)}
+                class="toggle"
+                type="button"
+                tabindex="0">Toggle</button
+            >
         </div>
     </aside>
 </main>

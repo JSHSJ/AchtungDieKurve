@@ -3,14 +3,15 @@
 @import "open-props/postcss/buttons";
 
 main {
-    --size-minified-aside: var(--size-fluid-7);
     --size-base: var(--size-fluid-2);
+    --size-minified-aside: var(--size-fluid-7);
+    --padding-minified-aside: calc(var(--size-base) * 1.5);
+    --block-size-player-row: var(--size-11);
     inline-size: 100%;
     block-size: 100vh;
     display: grid;
-    gap: var(--size-base);
-    grid: [main] 1fr
-    / [main-start] 11fr [aside-expanded-start] max-content [main-end aside] var(--size-minified-aside) [aside-expanded-end];
+    grid: [main aside score-board] 1fr
+    / [main-start] 11fr [aside] max-content [main-end score-board] var(--size-minified-aside);
 
     & > * {
         min-inline-size: 0;
@@ -28,9 +29,8 @@ h1 {
 }
 
 section {
-    background: red; /* @todo for debugging. remove afterwards */
-    grid-area: main / main-start / main / main-end;
-    /* padding: var(--size-base); */
+    grid-row: main;
+    grid-column: main-start / main-end;
 }
 
 .logo {
@@ -50,7 +50,7 @@ canvas {
 }
 
 aside {
-    grid-area: main / aside-expanded-start / main / aside-expanded-end;
+    grid-area: aside;
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-inline-size: 0;
@@ -58,41 +58,45 @@ aside {
     background-color: var(--surface-1);
     border-inline-start: var(--border-size-1) solid var(--surface-4);
 
+    transition: transform 0.3s ease;
+    will-change: transform;
+    transform: translateX(100%);
+
+    &[data-is-open="true"], &:focus-within {
+        transform: translateX(0%);
+    }
+
     & > * {
         min-block-size: 0;
     }
-}
-
-header {
-    padding: var(--size-base);
 }
 
 form {
     overflow-y: auto;
 }
 
+h1 {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: left;
+}
+
 fieldset {
     display: grid;
-    grid-template-columns: auto 1fr auto auto var(--size-minified-aside);
-    align-items: end;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
     gap: calc(var(--size-base) / 2);
     border-radius: 0;
     border: 0;
-    border-block-start: var(--border-size-1) solid var(--surface-4);
-    padding: var(--size-base);
+
+    & [name*="color"] {
+        margin-block-start: var(--size-5);
+        block-size: var(--size-7);
+    }
 
     & [name*="controls"] {
         inline-size: var(--size-9);
-    }
-
-    &:last-child {
-        border-block-end: var(--border-size-1) solid var(--surface-4);
-    }
-
-    & .score {
-        align-self: stretch;
-        display: grid;
-        place-items: center;
     }
 }
 
@@ -114,4 +118,58 @@ fieldset {
 
 .start {
     border-inline-start: var(--border-size-1) solid var(--surface-4);
+}
+
+.score-board {
+    grid-area: score-board;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    background-color: var(--surface-1);
+    border-inline-start: var(--border-size-1) solid var(--surface-4);
+
+    & > * {
+        min-inline-size: 0;
+        min-block-size: 0;
+    }
+}
+
+header, .total-score {
+    padding: var(--size-base);
+    font-weight: var(--font-weight-6);
+    font-size: var(--font-size-fluid-1);
+    line-height: var(--font-lineheight-1);
+    text-align: center;
+}
+
+.score {
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+
+    & > span {
+        margin-block-start: var(--size-1);
+        min-inline-size: 100%;
+        display: inline-block;
+        /* border-radius: var(--radius-round); */
+        min-block-size: var(--size-5);
+        font-size: var(--font-size-1);
+        text-align: center;
+
+        &:empty {
+            border-bottom: var(--border-size-2) dotted var(--surface-2);
+        }
+    }
+}
+
+fieldset, .score {
+    block-size: var(--block-size-player-row);
+    padding: var(--size-base);
+    border-block-start: var(--border-size-1) solid var(--surface-4);
+
+    &:last-child {
+        border-block-end: var(--border-size-1) solid var(--surface-4);
+    }
 }

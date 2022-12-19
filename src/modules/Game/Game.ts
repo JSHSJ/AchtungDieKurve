@@ -37,15 +37,10 @@ export class Game {
         });
 
         window.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (this.gameState !== GameState.SETUP) {
+            if (this.gameState === GameState.ROUND_OVER && e.key === ' ') {
                 e.preventDefault();
                 e.stopPropagation();
-            }
-
-            if (e.key === ' ') {
-                if (this.gameState === GameState.ROUND_OVER) {
-                    this.startNewRound();
-                }
+                this.startNewRound();
             }
         });
 

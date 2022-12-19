@@ -1,25 +1,52 @@
 <script lang="ts">
-    import {PLAYER_COLORS} from "./config/config";
-    import logoSvg from './assets/logo.svg';
-    import {onMount} from "svelte";
-    import {Game} from "./modules/Game/Game";
-    import {Player} from "./modules/Player/Player";
-    import {Canvas} from "./modules/Canvas/Canvas";
+    import { PLAYER_COLORS } from './config/config';
+    import { onMount } from 'svelte';
+    import { Game } from './modules/Game/Game';
+    import { Player } from './modules/Player/Player';
+    import { Canvas } from './modules/Canvas/Canvas';
+    import Score from './lib/score/Score.svelte';
+    import type { TControls } from './types/TControls';
 
+    let isOpen = true;
+
+    type PlayerData = {
+        id: string;
+        name: string;
+        controls: TControls;
+        color: string;
+    };
 
     let game: Game;
     let players: Player[] = [];
     let canvas: Canvas;
+    let totalScore: number = 120;
+
+    const initPlayer: (initColor: PlayerData['color']) => PlayerData = (initColor) => ({
+        id: '',
+        name: '',
+        controls: { left: '', right: '' },
+        color: initColor,
+    });
+
+    $: playersData = <PlayerData[]>[
+        structuredClone(initPlayer(PLAYER_COLORS[0])),
+        structuredClone(initPlayer(PLAYER_COLORS[1])),
+    ];
 
     onMount(() => {
         const canvasElement = document.querySelector('canvas');
-        canvas = Canvas.init(canvasElement)
-    })
+        canvas = Canvas.init(canvasElement);
+    });
 
     let numberOfPlayers = 2;
 
     function addPlayerRow() {
         numberOfPlayers += 1;
+        playersData = [
+            ...playersData,
+            structuredClone(initPlayer(PLAYER_COLORS[playersData.length])),
+        ];
+        console.log(playersData)
     }
 
     function handleSubmit(e: SubmitEvent) {
@@ -28,22 +55,22 @@
 
         if (game) {
             game.reset();
-            game.start()
-            return
+            game.start();
+            return;
         }
 
         Array(numberOfPlayers)
             .fill(0)
             .forEach((_player, idx) => {
                 const p = new Player({
-                        id: formData.get(`player[${idx}][name]`) as string,
-                        color: formData.get(`player[${idx}][color]`) as string,
-                        controls: {
-                            left: formData.get(`player[${idx}][controls][left]`) as string,
-                            right: formData.get(`player[${idx}][controls][right]`) as string,
-                        },
-                    })
-                players.push(p)
+                    id: formData.get(`player[${idx}][name]`) as string,
+                    color: formData.get(`player[${idx}][color]`) as string,
+                    controls: {
+                        left: formData.get(`player[${idx}][controls][left]`) as string,
+                        right: formData.get(`player[${idx}][controls][right]`) as string,
+                    },
+                });
+                players.push(p);
             });
 
         game = new Game(canvas, players);
@@ -55,17 +82,37 @@
     <section>
         <canvas />
     </section>
-    <aside>
+    <div
+        role="button"
+        type="button"
+        class="score-board"
+        tabindex="0"
+        on:click={() => isOpen = !isOpen}
+        on:keydown={() => isOpen = !isOpen}
+    >
+        <div class="total-score">
+            {totalScore}
+        </div>
+        <div>
+            {#each playersData as player, idx}
+                <div class="score">
+                    <Score score={0} {totalScore} color={PLAYER_COLORS[idx]} />
+                    <span>{player.name}</span>
+                </div>
+            {/each}
+        </div>
+    </div>
+    <aside data-is-open={isOpen}>
         <header>
             <h1>Achtung die Kurve</h1>
         </header>
         <form on:submit|preventDefault={handleSubmit} name="main">
-            {#each Array(numberOfPlayers).fill(0) as _player, idx}
+            {#each playersData as player, idx}
                 <fieldset name="player">
                     <input
                         type="color"
                         name="player[{idx}][color]"
-                        bind:value={PLAYER_COLORS[idx]}
+                        bind:value={player.color}
                     />
                     <div class="input-wrapper">
                         <label for="player[{idx}][name]">Your name</label>
@@ -74,6 +121,7 @@
                             required
                             name="player[{idx}][name]"
                             id="player[{idx}][name]"
+                            bind:value={player.name}
                         />
                     </div>
                     <div class="input-wrapper">
@@ -84,6 +132,7 @@
                             id="player[{idx}][controls][left]"
                             maxlength="1"
                             required
+                            bind:value={player.controls.left}
                         />
                     </div>
                     <div class="input-wrapper">
@@ -94,10 +143,8 @@
                             type="text"
                             maxlength="1"
                             required
+                            bind:value={player.controls.right}
                         />
-                    </div>
-                    <div class="score">
-                        <span>Score</span>
                     </div>
                 </fieldset>
             {/each}

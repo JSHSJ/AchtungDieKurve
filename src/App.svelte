@@ -34,13 +34,13 @@
 
     onMount(() => {
         const canvasElement = document.querySelector('canvas');
+        if (!canvasElement) {
+            throw new Error('Canvas element not found');
+        }
         canvas = Canvas.init(canvasElement);
     });
 
-    let numberOfPlayers = 2;
-
     function addPlayerRow() {
-        numberOfPlayers += 1;
         const newPlayer = initPlayer(PLAYER_COLORS[players.length]);
 
         players = [
@@ -127,7 +127,7 @@
                     </fieldset>
                     <div class="score">
                         <Score score={scoreboard[player.id] ?? 0} {totalScore} color={PLAYER_COLORS[idx]} />
-                        <span>{player.name}</span>
+                        <span>{player.name ?? 'unnamed'}</span>
                     </div>
                 </div>
             {/each}

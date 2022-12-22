@@ -3,7 +3,7 @@ import type { TDirection } from '../../types/TDirection';
 import { updateRotationValueCos, updateRotationValueSin } from '../../util/updateRotationValue';
 import { BASE_SPEED, FULL_TURNING_RADIUS } from '../../config/config';
 import type { TControls } from '../../types/TControls';
-import {generateUUID} from "../../util/generateUUID";
+import { generateUUID } from '../../util/generateUUID';
 
 export type PlayerArgs = {
     id: string;
@@ -24,7 +24,6 @@ export class Player {
     private controls: TControls;
     public path: Path2D;
 
-
     /**
      * Don't use this method to create new player, use static method createPlayerStub instead
      */
@@ -32,10 +31,15 @@ export class Player {
         this.id = args.id;
         this.color = args.color;
         this.controls = args.controls;
+        this.name = args.name;
+        this.isAlive = false;
+        this.currentPosition = { x: 0, y: 0 };
+        this.startPos = { x: 0, y: 0 };
+        this.path = new Path2D();
     }
 
     public static createPlayerStub(): Player {
-        const id = generateUUID('player')
+        const id = generateUUID('player');
         return new Player({ id, color: 'black', controls: { left: '', right: '' }, name: '' });
     }
 
@@ -90,5 +94,4 @@ export class Player {
         this.updateDirection();
         this.path = new Path2D();
     }
-
 }

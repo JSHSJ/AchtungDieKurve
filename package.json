@@ -10,7 +10,9 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json",
+        "check:svelte": "svelte-check --tsconfig ./tsconfig.json",
+        "check:ts": "tsc --noEmit",
+        "check": "npm run check:svelte && npm run check:ts",
         "prettier": "prettier --write ."
     },
     "devDependencies": {

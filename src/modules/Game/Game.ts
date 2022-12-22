@@ -1,11 +1,11 @@
-import type {Player} from '../Player/Player';
-import type {Canvas} from '../Canvas/Canvas';
-import {Round} from '../Round/Round';
-import {RoundEventTypes} from '../Round/Round.types';
-import {setStartParamsForPlayer} from '../../util/setStartParamsForPlayer';
-import type {TGameEvent, TGameScore} from "./Game.types";
-import {TGameEventTypes} from "./Game.types";
-import {EventEmitter} from "../EventEmitter/EventEmitter";
+import type { Player } from '../Player/Player';
+import type { Canvas } from '../Canvas/Canvas';
+import { Round } from '../Round/Round';
+import { RoundEventTypes } from '../Round/Round.types';
+import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
+import type { TGameEvent, TGameScore } from './Game.types';
+import { TGameEventTypes } from './Game.types';
+import { EventEmitter } from '../EventEmitter/EventEmitter';
 
 enum GameState {
     SETUP = 'SETUP',
@@ -18,15 +18,13 @@ enum GameState {
 export class Game extends EventEmitter<TGameEvent> {
     public canvas: Canvas;
 
-    private keys: Set<string>;
+    private readonly keys: Set<string>;
 
-    private players: Player[];
-    private pointGoal: number;
-    private score : TGameScore;
+    private readonly players: Player[];
+    private readonly pointGoal: number;
+    private score: TGameScore = {};
 
     private gameState = GameState.SETUP;
-    private currentRound: Round;
-
 
     constructor(canvas: Canvas, players: Player[], pointGoal = 50) {
         super();
@@ -60,7 +58,7 @@ export class Game extends EventEmitter<TGameEvent> {
         });
         this.canvas.clear();
         this.gameState = GameState.PREGAME;
-        this.resetScore()
+        this.resetScore();
     }
 
     public start() {
@@ -69,14 +67,14 @@ export class Game extends EventEmitter<TGameEvent> {
     }
 
     public startNewRound() {
-        this.currentRound = new Round(this.canvas, this.players, this.keys);
-        this.currentRound.subscribe((event) => {
+        const round = new Round(this.canvas, this.players, this.keys);
+        round.subscribe((event) => {
             if (event.type === RoundEventTypes.ROUND_OVER) {
                 this.handleRoundOver(event.winner);
                 this.gameState = GameState.ROUND_OVER;
             }
         });
-        this.currentRound.start();
+        round.start();
         this.gameState = GameState.RUNNING;
     }
 
@@ -87,14 +85,17 @@ export class Game extends EventEmitter<TGameEvent> {
         }, {} as TGameScore);
         this.emit({
             type: TGameEventTypes.SCORE_UPDATED,
-            score: this.score
-        })
+            score: this.score,
+        });
     }
 
     private checkGameOver(): boolean {
         for (const [playerId, playerScore] of Object.entries(this.score)) {
             if (playerScore >= this.pointGoal) {
                 const winner = this.players.find((player) => player.id === playerId);
+                if (!winner) {
+                    return false;
+                }
                 this.handleGameOver(winner);
                 return true;
             }
@@ -106,9 +107,9 @@ export class Game extends EventEmitter<TGameEvent> {
         if (winner) {
             this.score[winner.id] += 10;
             this.emit({
-            type: TGameEventTypes.SCORE_UPDATED,
-            score: this.score
-        })
+                type: TGameEventTypes.SCORE_UPDATED,
+                score: this.score,
+            });
         }
         this.canvas.drawRoundOver(winner);
         this.checkGameOver();
@@ -118,5 +119,4 @@ export class Game extends EventEmitter<TGameEvent> {
         this.gameState = GameState.FINISHED;
         this.canvas.drawWinner(winner);
     }
-
 }

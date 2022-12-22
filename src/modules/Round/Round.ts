@@ -3,13 +3,13 @@ import type { Player } from '../Player/Player';
 import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
 import type { RoundEvent } from './Round.types';
 import { RoundEventTypes, RoundState } from './Round.types';
+import {EventEmitter} from "../EventEmitter/EventEmitter";
 
-export class Round {
+ export class Round extends EventEmitter<RoundEvent> {
     canvas: Canvas;
     players: Player[];
     state: RoundState = RoundState.PRE_ROUND;
 
-    private listeners: ((RoundEvent) => void)[] = [];
 
     private keys: Set<string>;
 
@@ -20,6 +20,8 @@ export class Round {
     private delta: number = 0;
 
     constructor(canvas: Canvas, players: Player[], keys: Set<string>) {
+        super();
+
         this.canvas = canvas;
         this.players = players;
         this.keys = keys;
@@ -112,13 +114,5 @@ export class Round {
             result: alivePlayers[0] ? 'PLAYER_WON' : 'DRAW',
             winner: alivePlayers[0],
         });
-    }
-
-    public subscribe(callback: (event: RoundEvent) => void) {
-        this.listeners.push(callback);
-    }
-
-    private emit(event: RoundEvent) {
-        this.listeners.forEach((listener) => listener(event));
     }
 }

@@ -5,6 +5,8 @@
     import {Player} from './modules/Player/Player';
     import {Canvas} from './modules/Canvas/Canvas';
     import Score from "./lib/score/Score.svelte";
+    import type {TGameEvent, TGameScore} from "./modules/Game/Game.types";
+    import {TGameEventTypes} from "./modules/Game/Game.types";
 
     let isOpen = true;
     let disabled = false;
@@ -24,6 +26,11 @@
         initPlayer(PLAYER_COLORS[1]),
     ];
 
+    $: scoreboard = <TGameScore>{
+        [players[0].id]: 0,
+        [players[1].id]: 0,
+    }
+
 
     onMount(() => {
         const canvasElement = document.querySelector('canvas');
@@ -34,18 +41,18 @@
 
     function addPlayerRow() {
         numberOfPlayers += 1;
+        const newPlayer = initPlayer(PLAYER_COLORS[players.length]),
+
         players = [
             ...players,
-            initPlayer(PLAYER_COLORS[players.length]),
+            newPlayer
         ];
+        scoreboard[newPlayer.id] = 0;
     }
 
-    function handleSubmit(e: SubmitEvent) {
+    function handleSubmit() {
         isOpen = false;
         disabled = true;
-
-        const formElem = e.target as HTMLFormElement;
-        const formData = new FormData(formElem);
 
         if (game) {
             game.reset();
@@ -53,13 +60,17 @@
             return;
         }
 
-        players.forEach((player: Player, idx) => {
+        players.forEach((player: Player) => {
             player.init();
         })
 
-        console.log(players)
 
         game = new Game(canvas, players);
+        game.subscribe((e: TGameEvent) => {
+            if (e.type === TGameEventTypes.SCORE_UPDATED) {
+                scoreboard = e.score;
+            }
+        })
         game.start();
     }
 </script>
@@ -114,7 +125,7 @@
                         </div>
                     </fieldset>
                     <div class="score">
-                        <Score score={player.points} {totalScore} color={PLAYER_COLORS[idx]} />
+                        <Score score={scoreboard[player.id] ?? 0} {totalScore} color={PLAYER_COLORS[idx]} />
                         <span>{player.name}</span>
                     </div>
                 </div>

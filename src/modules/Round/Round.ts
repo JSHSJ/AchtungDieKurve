@@ -11,7 +11,7 @@ import {EventEmitter} from "../EventEmitter/EventEmitter";
     state: RoundState = RoundState.PRE_ROUND;
 
 
-    private keys: Set<string>;
+    private readonly keys: Set<string>;
 
     private fps = 60;
     private now = 0;

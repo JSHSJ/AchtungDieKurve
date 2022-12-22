@@ -53,7 +53,7 @@ export class Canvas {
     public doesPointCollideWithPath = (
         path: Path2D,
         point: TPosition,
-        lineWidth = PLAYER_WIDTH,
+        lineWidth = PLAYER_WIDTH * 2,
     ) => {
         this.ctx.lineWidth = lineWidth;
         return this.ctx.isPointInStroke(path, point.x, point.y);
@@ -130,9 +130,10 @@ export class Canvas {
 
         // player collides with other players
         for (const otherPlayer of otherPlayers) {
+            const lineWidth = player.id === otherPlayer.id ? 1 : PLAYER_WIDTH * 3;
             if (
                 // reduce line with to prevent self collision
-                this.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, 1)
+                this.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, lineWidth)
             ) {
                 return true;
             }

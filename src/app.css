@@ -2,7 +2,7 @@
 @import 'open-props/postcss/normalize';
 @import 'open-props/postcss/buttons';
 
-@custom-selector :--min-aside fieldset, .score, .action-main, .toggle, h1, .total-score;
+@custom-selector :--min-aside fieldset, .score, .action-main, .toggle, .logo, .total-score;
 
 main {
     --size-base: var(--size-fluid-2);
@@ -77,17 +77,10 @@ aside {
 header {
     display: grid;
     grid-template-columns: 1fr [stack] var(--size-minified-aside);
+    align-items: center;
 }
 
-h1 {
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    text-align: left;
-    white-space: nowrap;
-}
-
-h1,
+.logo,
 .total-score {
     padding: var(--size-base);
     font-weight: var(--font-weight-6);

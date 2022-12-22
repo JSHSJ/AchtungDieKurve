@@ -13,6 +13,7 @@
     import favicon16 from "./assets/favicon/favicon-16x16.png";
     import siteManifest from "./assets/favicon/site.webmanifest";
     import safariPinnedTab from "./assets/favicon/safari-pinned-tab.svg";
+    import ogImage from './assets/kurveee-og-image.png';
 
     let isOpen = true;
     let disabled = false;
@@ -90,7 +91,9 @@
     <link rel="mask-icon" href={safariPinnedTab} color="#000000">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
-
+    <meta property="og:title" content="kurveee - the game" />
+    <meta property="og:url" content="https://kurveee.de" />
+    <meta property="og:image" content={ogImage} />
 </svelte:head>
 
 <main>

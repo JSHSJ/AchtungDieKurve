@@ -1,8 +1,11 @@
-import type { Player } from '../Player/Player';
-import type { Canvas } from '../Canvas/Canvas';
-import { Round } from '../Round/Round';
-import { RoundEventTypes } from '../Round/Round.types';
-import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
+import type {Player} from '../Player/Player';
+import type {Canvas} from '../Canvas/Canvas';
+import {Round} from '../Round/Round';
+import {RoundEventTypes} from '../Round/Round.types';
+import {setStartParamsForPlayer} from '../../util/setStartParamsForPlayer';
+import type {TGameEvent, TGameScore} from "./Game.types";
+import {TGameEventTypes} from "./Game.types";
+import {EventEmitter} from "../EventEmitter/EventEmitter";
 
 enum GameState {
     SETUP = 'SETUP',
@@ -12,18 +15,21 @@ enum GameState {
     FINISHED = 'FINISHED',
 }
 
-export class Game {
+export class Game extends EventEmitter<TGameEvent> {
     public canvas: Canvas;
 
     private keys: Set<string>;
 
     private players: Player[];
     private pointGoal: number;
+    private score : TGameScore;
 
     private gameState = GameState.SETUP;
     private currentRound: Round;
 
+
     constructor(canvas: Canvas, players: Player[], pointGoal = 50) {
+        super();
         this.canvas = canvas;
         this.players = players;
         this.keys = new Set<string>();
@@ -54,6 +60,7 @@ export class Game {
         });
         this.canvas.clear();
         this.gameState = GameState.PREGAME;
+        this.resetScore()
     }
 
     public start() {
@@ -73,10 +80,22 @@ export class Game {
         this.gameState = GameState.RUNNING;
     }
 
+    private resetScore() {
+        this.score = this.players.reduce((acc, player) => {
+            acc[player.id] = 0;
+            return acc;
+        }, {} as TGameScore);
+        this.emit({
+            type: TGameEventTypes.SCORE_UPDATED,
+            score: this.score
+        })
+    }
+
     private checkGameOver(): boolean {
-        for (const player of this.players) {
-            if (player.points >= this.pointGoal) {
-                this.handleGameOver(player);
+        for (const [playerId, playerScore] of Object.entries(this.score)) {
+            if (playerScore >= this.pointGoal) {
+                const winner = this.players.find((player) => player.id === playerId);
+                this.handleGameOver(winner);
                 return true;
             }
         }
@@ -85,7 +104,11 @@ export class Game {
 
     private handleRoundOver(winner?: Player) {
         if (winner) {
-            winner.addPoints(10);
+            this.score[winner.id] += 10;
+            this.emit({
+            type: TGameEventTypes.SCORE_UPDATED,
+            score: this.score
+        })
         }
         this.canvas.drawRoundOver(winner);
         this.checkGameOver();
@@ -95,4 +118,5 @@ export class Game {
         this.gameState = GameState.FINISHED;
         this.canvas.drawWinner(winner);
     }
+
 }

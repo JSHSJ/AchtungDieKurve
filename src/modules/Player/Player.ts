@@ -3,6 +3,7 @@ import type { TDirection } from '../../types/TDirection';
 import { updateRotationValueCos, updateRotationValueSin } from '../../util/updateRotationValue';
 import { BASE_SPEED, FULL_TURNING_RADIUS } from '../../config/config';
 import type { TControls } from '../../types/TControls';
+import {generateUUID} from "../../util/generateUUID";
 
 export type PlayerArgs = {
     id: string;
@@ -22,7 +23,7 @@ export class Player {
     private directionControl = 0;
     private controls: TControls;
     public path: Path2D;
-    public points: number = 0;
+
 
     /**
      * Don't use this method to create new player, use static method createPlayerStub instead
@@ -34,7 +35,8 @@ export class Player {
     }
 
     public static createPlayerStub(): Player {
-        return new Player({ id: '', color: 'black', controls: { left: '', right: '' }, name: '' });
+        const id = generateUUID('player')
+        return new Player({ id, color: 'black', controls: { left: '', right: '' }, name: '' });
     }
 
     public init() {
@@ -81,7 +83,6 @@ export class Player {
 
     public reset() {
         this.resetStartPosition();
-        this.points = 0;
     }
 
     public resetStartPosition() {
@@ -90,8 +91,4 @@ export class Player {
         this.path = new Path2D();
     }
 
-    public addPoints(points: number) {
-        this.points += points;
-        console.log('points', this.points, this.name);
-    }
 }

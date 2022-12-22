@@ -13,7 +13,7 @@
 
     let game: Game;
     let canvas: Canvas;
-    let totalScore: number = 120;
+    let totalScore: number = 50;
 
     const initPlayer: (initColor: Player['color']) => Player = (initColor) => {
         const player = Player.createPlayerStub()
@@ -65,7 +65,7 @@
         })
 
 
-        game = new Game(canvas, players);
+        game = new Game(canvas, players, totalScore);
         game.subscribe((e: TGameEvent) => {
             if (e.type === TGameEventTypes.SCORE_UPDATED) {
                 scoreboard = e.score;

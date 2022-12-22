@@ -41,12 +41,13 @@
 
     function addPlayerRow() {
         numberOfPlayers += 1;
-        const newPlayer = initPlayer(PLAYER_COLORS[players.length]),
+        const newPlayer = initPlayer(PLAYER_COLORS[players.length]);
 
         players = [
             ...players,
             newPlayer
         ];
+
         scoreboard[newPlayer.id] = 0;
     }
 

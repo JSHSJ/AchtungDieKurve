@@ -36,7 +36,7 @@
     $: scoreboard = <TGameScore>{
         [players[0].id]: 0,
         [players[1].id]: 0,
-    }
+    };
 
 
     onMount(() => {
@@ -146,7 +146,7 @@
                         </div>
                     </fieldset>
                     <div class="score">
-                        <Score score={scoreboard[player.id] ?? 0} {totalScore} color={PLAYER_COLORS[idx]} />
+                        <Score score={scoreboard[player.id] ?? 0} {totalScore} color={player.color} />
                         <span>{player.name ?? 'unnamed'}</span>
                     </div>
                 </div>

@@ -21,7 +21,7 @@ export class Player {
     public currentPosition: TPosition;
     public startPos: TPosition;
     private directionControl = 0;
-    private controls: TControls;
+    public controls: TControls;
     public path: Path2D;
 
     /**

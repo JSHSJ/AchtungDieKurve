@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {PLAYER_COLORS} from './config/config';
+    import {PLAYER_COLORS, PLAYER_CONTROLS} from './config/config';
     import {onMount} from 'svelte';
     import {Game} from './modules/Game/Game';
     import {Player} from './modules/Player/Player';
@@ -21,15 +21,19 @@
     let game: Game;
     let canvas: Canvas;
 
-    const initPlayer: (initColor: Player['color']) => Player = (initColor) => {
+    const initPlayer: (
+        initColor: Player['color'],
+        initControls: Player['controls'],
+    ) => Player = (initColor, initControls) => {
         const player = Player.createPlayerStub()
-        player.color = initColor;
+        if (initColor) player.color = initColor;
+        if (initControls) player.controls = initControls;
         return player
     }
 
     $: players = <Player[]>[
-        initPlayer(PLAYER_COLORS[0]),
-        initPlayer(PLAYER_COLORS[1]),
+        initPlayer(PLAYER_COLORS[0], PLAYER_CONTROLS[0]),
+        initPlayer(PLAYER_COLORS[1], PLAYER_CONTROLS[1]),
     ];
     $: totalScore = <number>(players.length -1) * 10;
 
@@ -48,7 +52,10 @@
     });
 
     function addPlayerRow() {
-        const newPlayer = initPlayer(PLAYER_COLORS[players.length]);
+        const newPlayer = initPlayer(
+            PLAYER_COLORS[players.length],
+            PLAYER_CONTROLS[players.length],
+        );
 
         players = [
             ...players,

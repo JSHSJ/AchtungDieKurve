@@ -105,7 +105,7 @@ export class Game extends EventEmitter<TGameEvent> {
 
     private handleRoundOver(winner?: Player) {
         if (winner) {
-            this.score[winner.id] += 10;
+            this.score[winner.id] += (this.players.length - 1);
             this.emit({
                 type: TGameEventTypes.SCORE_UPDATED,
                 score: this.score,

@@ -20,7 +20,6 @@
 
     let game: Game;
     let canvas: Canvas;
-    let totalScore: number = 50;
 
     const initPlayer: (initColor: Player['color']) => Player = (initColor) => {
         const player = Player.createPlayerStub()
@@ -32,6 +31,7 @@
         initPlayer(PLAYER_COLORS[0]),
         initPlayer(PLAYER_COLORS[1]),
     ];
+    $: totalScore = <number>(players.length -1) * 10;
 
     $: scoreboard = <TGameScore>{
         [players[0].id]: 0,

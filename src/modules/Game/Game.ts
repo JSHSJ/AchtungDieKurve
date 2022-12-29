@@ -1,11 +1,13 @@
 import type { Player } from '../Player/Player';
 import type { Canvas } from '../Canvas/Canvas';
 import { Round } from '../Round/Round';
+import type { RoundEvent } from '../Round/Round.types';
 import { RoundEventTypes } from '../Round/Round.types';
 import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
 import type { TGameEvent, TGameScore } from './Game.types';
 import { TGameEventTypes } from './Game.types';
 import { EventEmitter } from '../EventEmitter/EventEmitter';
+import { SCORE_CREDIT_KILLER, SCORE_USE_RANKING } from '../../config/config';
 
 enum GameState {
     SETUP = 'SETUP',
@@ -68,14 +70,31 @@ export class Game extends EventEmitter<TGameEvent> {
 
     public startNewRound() {
         const round = new Round(this.canvas, this.players, this.keys);
-        round.subscribe((event) => {
-            if (event.type === RoundEventTypes.ROUND_OVER) {
-                this.handleRoundOver(event.winner);
-                this.gameState = GameState.ROUND_OVER;
-            }
-        });
+        round.subscribe(this.handleRoundEvent.bind(this));
         round.start();
         this.gameState = GameState.RUNNING;
+    }
+
+    private handleRoundEvent(event: RoundEvent) {
+        if (event.type === RoundEventTypes.ROUND_OVER) {
+            this.handleRoundOver(event.ranking);
+            this.gameState = GameState.ROUND_OVER;
+        }
+        // If a player collides with a another player, credit the "killer" with a point and kill the player
+        if (event.type === RoundEventTypes.PLAYER_COLLISION) {
+            event.collision.player.die();
+
+            if (SCORE_CREDIT_KILLER) {
+                this.score[event.collision.into.id] += 1;
+                this.emit({
+                    type: TGameEventTypes.SCORE_UPDATED,
+                    score: this.score,
+                });
+            }
+        }
+        if (event.type === RoundEventTypes.WALL_COLLISION) {
+            event.collision.player.die();
+        }
     }
 
     private resetScore() {
@@ -103,15 +122,24 @@ export class Game extends EventEmitter<TGameEvent> {
         return false;
     }
 
-    private handleRoundOver(winner?: Player) {
-        if (winner) {
-            this.score[winner.id] += (this.players.length - 1);
-            this.emit({
-                type: TGameEventTypes.SCORE_UPDATED,
-                score: this.score,
-            });
+    private handleRoundOver(ranking: Player[]) {
+        // Correct score based on (NumberOfPlayers - PlayersRank + 1) + NumberOfPlayersKilled
+        if (ranking.length === 0) {
+            return;
         }
-        this.canvas.drawRoundOver(winner);
+
+        if (SCORE_USE_RANKING) {
+            ranking.forEach((player, index) => {
+                this.score[player.id] += this.players.length - index;
+            });
+        } else {
+            this.score[ranking[0].id] += this.players.length - 1;
+        }
+        this.emit({
+            type: TGameEventTypes.SCORE_UPDATED,
+            score: this.score,
+        });
+        this.canvas.drawRoundOver(ranking[0]);
         this.checkGameOver();
     }
 

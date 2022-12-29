@@ -3,13 +3,14 @@ import type { Player } from '../Player/Player';
 import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
 import type { RoundEvent } from './Round.types';
 import { RoundEventTypes, RoundState } from './Round.types';
-import {EventEmitter} from "../EventEmitter/EventEmitter";
+import { EventEmitter } from '../EventEmitter/EventEmitter';
+import type { Collision } from '../Canvas/Canvas.types';
 
- export class Round extends EventEmitter<RoundEvent> {
+export class Round extends EventEmitter<RoundEvent> {
     canvas: Canvas;
     players: Player[];
+    #playerRanking: Player[] = [];
     state: RoundState = RoundState.PRE_ROUND;
-
 
     private readonly keys: Set<string>;
 
@@ -65,7 +66,8 @@ import {EventEmitter} from "../EventEmitter/EventEmitter";
             player.turn(this.keys);
         });
 
-        this.checkCollisions();
+        const collisions = this.checkCollisions();
+        this.handleCollisions(collisions);
 
         if (this.checkRoundOver()) {
             return;
@@ -81,10 +83,32 @@ import {EventEmitter} from "../EventEmitter/EventEmitter";
         }
     }
 
-    public checkCollisions() {
-        this.players.forEach((player) => {
-            if (this.canvas.didPlayerCollide(player, this.players)) {
-                player.die();
+    public checkCollisions(): Collision[] {
+        return this.players
+            .map((player) => this.canvas.didPlayerCollide(player, this.players))
+            .reduce((acc, collision) => {
+                if (collision) {
+                    acc.push(collision);
+                }
+                return acc;
+            }, [] as Collision[]);
+    }
+
+    private handleCollisions(collisions: Collision[]): void {
+        collisions.forEach((collision) => {
+            // Add dead player to the front of the players
+            this.#playerRanking = [collision.player, ...this.#playerRanking];
+            if (collision?.type === 'PLAYER_COLLISION') {
+                this.emit({
+                    type: RoundEventTypes.PLAYER_COLLISION,
+                    collision,
+                });
+            }
+            if (collision?.type === 'WALL_COLLISION') {
+                this.emit({
+                    type: RoundEventTypes.WALL_COLLISION,
+                    collision,
+                });
             }
         });
     }
@@ -109,10 +133,11 @@ import {EventEmitter} from "../EventEmitter/EventEmitter";
     }
 
     private handleRoundOver(alivePlayers: Player[]) {
+        this.#playerRanking = [...alivePlayers, ...this.#playerRanking];
         this.emit({
             type: RoundEventTypes.ROUND_OVER,
             result: alivePlayers[0] ? 'PLAYER_WON' : 'DRAW',
-            winner: alivePlayers[0],
+            ranking: this.#playerRanking,
         });
     }
 }

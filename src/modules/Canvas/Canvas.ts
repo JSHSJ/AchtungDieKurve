@@ -1,6 +1,8 @@
 import { DEFAULT_CANVAS_SIZE, PLAYER_LINE_DASH, PLAYER_WIDTH } from '../../config/config';
 import type { Player } from '../Player/Player';
 import type { TPosition } from '../../types/TPosition';
+import type { Collision } from './Canvas.types';
+import { CollisionType } from './Canvas.types';
 
 export class Canvas {
     public width: number;
@@ -117,7 +119,7 @@ export class Canvas {
         this.ctx.fillText('WINNER', midX + 10, midY + 160);
     }
 
-    public didPlayerCollide(player: Player, otherPlayers: Player[]): boolean {
+    public didPlayerCollide(player: Player, otherPlayers: Player[]): Collision | undefined {
         // player collides with game boundaries
         if (
             player.currentPosition.x - PLAYER_WIDTH <= 0 ||
@@ -125,7 +127,10 @@ export class Canvas {
             player.currentPosition.y - PLAYER_WIDTH <= 0 ||
             player.currentPosition.y + PLAYER_WIDTH >= this.height
         ) {
-            return true;
+            return {
+                type: CollisionType.WALL_COLLISION,
+                player,
+            };
         }
 
         // player collides with other players
@@ -135,10 +140,12 @@ export class Canvas {
                 // reduce line with to prevent self collision
                 this.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, lineWidth)
             ) {
-                return true;
+                return {
+                    type: CollisionType.PLAYER_COLLISION,
+                    player,
+                    into: otherPlayer,
+                };
             }
         }
-
-        return false;
     }
 }

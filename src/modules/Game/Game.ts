@@ -12,6 +12,7 @@ import { SCORE_CREDIT_KILLER, SCORE_USE_RANKING } from '../../config/config';
 enum GameState {
     SETUP = 'SETUP',
     PREGAME = 'PREGAME',
+    PREROUND = 'PREROUND',
     RUNNING = 'RUNNING',
     ROUND_OVER = 'ROUND_OVER',
     FINISHED = 'FINISHED',
@@ -24,6 +25,7 @@ export class Game extends EventEmitter<TGameEvent> {
 
     private readonly players: Player[];
     private readonly pointGoal: number;
+    private round: Round | null = null;
     private score: TGameScore = {};
 
     private gameState = GameState.SETUP;
@@ -46,7 +48,14 @@ export class Game extends EventEmitter<TGameEvent> {
             if (this.gameState === GameState.ROUND_OVER && e.key === ' ') {
                 e.preventDefault();
                 e.stopPropagation();
-                this.startNewRound();
+                this.prepareNewRound();
+                return;
+            }
+            if (this.gameState === GameState.PREROUND && e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                this.startRound();
+                return;
             }
         });
 
@@ -63,15 +72,18 @@ export class Game extends EventEmitter<TGameEvent> {
         this.resetScore();
     }
 
-    public start() {
-        this.gameState = GameState.RUNNING;
-        this.startNewRound();
+    public prepareNewRound() {
+        this.gameState = GameState.PREROUND;
+        this.round = new Round(this.canvas, this.players, this.keys);
+        this.round.subscribe(this.handleRoundEvent.bind(this));
+        this.canvas.drawPreRound();
     }
 
-    public startNewRound() {
-        const round = new Round(this.canvas, this.players, this.keys);
-        round.subscribe(this.handleRoundEvent.bind(this));
-        round.start();
+    public startRound() {
+        if (!this.round) {
+            return;
+        }
+        this.round.start();
         this.gameState = GameState.RUNNING;
     }
 

@@ -65,24 +65,51 @@ export class Canvas {
         this.ctx.clearRect(0, 0, this.width, this.height);
     };
 
-    public drawRoundOver(winner?: Player) {
+    public drawPreRound() {
+        this.clear();
+        const midX = this.width / 2;
+        const midY = this.height / 2 - 140;
+        // @TODO: Find a way to set this to a better color
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'red';
+        this.ctx.font = '30px Arial';
+        this.ctx.fillText('Ready?', midX, midY + 120);
+
+        this.ctx.font = '20px Arial';
+        this.ctx.fillText('- Press space to start the next round - ', midX, midY + 200);
+    }
+
+    public drawCountdown(countdown: number) {
+        this.clear();
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
+        this.ctx.fillStyle = 'red';
+        this.ctx.font = '30px Arial';
+        this.ctx.fillText('ROUND STARTS IN', midX - 50, midY + 120);
+        this.ctx.fillText(countdown.toString(), midX + 100, midY + 160);
+    }
+
+    public drawRoundOver(winner?: Player) {
+        const midX = this.width / 2;
+        const midY = this.height / 2 - 120;
+        this.ctx.textAlign = 'center';
+
         // @TODO: improve this design and color
         this.ctx.fillStyle = winner?.color || 'red';
         this.ctx.font = '30px Arial';
-        this.ctx.fillText('ROUND OVER', midX - 30, midY + 120);
+        this.ctx.fillText('ROUND OVER', midX, midY + 120);
         if (winner) {
-            this.ctx.fillText('WINNER', midX + 10, midY + 160);
+            this.ctx.fillText('WINNER', midX, midY + 160);
         }
         this.ctx.font = '20px Arial';
-        this.ctx.fillText('- Press space to start the next round - ', midX - 100, midY + 200);
+        this.ctx.fillText('- Press space to start the next round - ', midX, midY + 200);
     }
 
     public drawWinner(winner: Player) {
         this.clear();
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
+        this.ctx.textAlign = 'center';
         this.ctx.fillStyle = winner.color;
         this.ctx.beginPath();
         this.ctx.moveTo(midX + 75, midY + 40);
@@ -116,7 +143,7 @@ export class Canvas {
         this.ctx.fill();
         // @TODO: change font
         this.ctx.font = '30px Arial';
-        this.ctx.fillText('WINNER', midX + 10, midY + 160);
+        this.ctx.fillText('WINNER', midX + 75, midY + 160);
     }
 
     public didPlayerCollide(player: Player, otherPlayers: Player[]): Collision | undefined {

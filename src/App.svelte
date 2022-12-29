@@ -65,7 +65,7 @@
 
         if (game) {
             game.reset();
-            game.start();
+            game.prepareNewRound();
             return;
         }
 
@@ -80,7 +80,7 @@
                 scoreboard = e.score;
             }
         })
-        game.start();
+        game.prepareNewRound();
     }
 </script>
 

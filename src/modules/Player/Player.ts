@@ -17,7 +17,7 @@ export class Player {
     public name: string;
     public isAlive: boolean;
     public color: string;
-    private direction: TDirection = { x: 0, y: -1 };
+    public direction: TDirection = { x: 0, y: -1 };
     public currentPosition: TPosition;
     public startPos: TPosition;
     private directionControl = 0;

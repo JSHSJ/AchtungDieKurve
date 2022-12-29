@@ -1,6 +1,5 @@
 import type { Canvas } from '../Canvas/Canvas';
 import type { Player } from '../Player/Player';
-import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
 import type { RoundEvent } from './Round.types';
 import { RoundEventTypes, RoundState } from './Round.types';
 import { EventEmitter } from '../EventEmitter/EventEmitter';
@@ -29,10 +28,6 @@ export class Round extends EventEmitter<RoundEvent> {
     }
 
     public start() {
-        this.players.forEach((player) => {
-            player.resetStartPosition();
-            setStartParamsForPlayer(player, this.canvas.width, this.canvas.height);
-        });
         this.canvas.clear();
         this.state = RoundState.RUNNING;
         this.runGameLoopWrapper();

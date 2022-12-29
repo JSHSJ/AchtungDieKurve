@@ -77,7 +77,11 @@ export class Game extends EventEmitter<TGameEvent> {
         this.gameState = GameState.PREROUND;
         this.round = new Round(this.canvas, this.players, this.keys);
         this.round.subscribe(this.handleRoundEvent.bind(this));
-        this.canvas.drawPreRound();
+        this.players.forEach((player) => {
+            player.resetStartPosition();
+            setStartParamsForPlayer(player, this.canvas.width, this.canvas.height);
+        });
+        this.canvas.drawPreRound(this.players);
     }
 
     public startRound() {
@@ -91,7 +95,7 @@ export class Game extends EventEmitter<TGameEvent> {
         }
         this.gameState = GameState.PREROUND_COUNTDOWN;
         let countdown = 3;
-        this.canvas.drawCountdown(countdown);
+        this.canvas.drawCountdown(countdown, this.players);
 
         const interval = setInterval(() => {
             countdown -= 1;
@@ -99,7 +103,7 @@ export class Game extends EventEmitter<TGameEvent> {
                 clearInterval(interval);
                 this.startRound();
             }
-            this.canvas.drawCountdown(countdown);
+            this.canvas.drawCountdown(countdown, this.players);
         }, 1000);
     }
 

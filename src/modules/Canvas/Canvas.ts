@@ -1,8 +1,14 @@
-import { DEFAULT_CANVAS_SIZE, PLAYER_LINE_DASH, PLAYER_WIDTH } from '../../config/config';
+import {
+    BASE_SPEED,
+    DEFAULT_CANVAS_SIZE,
+    PLAYER_LINE_DASH,
+    PLAYER_WIDTH,
+} from '../../config/config';
 import type { Player } from '../Player/Player';
 import type { TPosition } from '../../types/TPosition';
 import type { Collision } from './Canvas.types';
 import { CollisionType } from './Canvas.types';
+import type { TDirection } from '../../types/TDirection';
 
 export class Canvas {
     public width: number;
@@ -65,7 +71,7 @@ export class Canvas {
         this.ctx.clearRect(0, 0, this.width, this.height);
     };
 
-    public drawPreRound() {
+    public drawPreRound(players: Player[]) {
         this.clear();
         const midX = this.width / 2;
         const midY = this.height / 2 - 140;
@@ -77,9 +83,10 @@ export class Canvas {
 
         this.ctx.font = '20px Arial';
         this.ctx.fillText('- Press space to start the next round - ', midX, midY + 200);
+        this.drawPlayerArrows(players);
     }
 
-    public drawCountdown(countdown: number) {
+    public drawCountdown(countdown: number, players: Player[]) {
         this.clear();
         const midX = this.width / 2;
         const midY = this.height / 2 - 120;
@@ -89,6 +96,7 @@ export class Canvas {
         this.ctx.font = '30px Arial';
         this.ctx.fillText('ROUND STARTS IN', midX, midY + 120);
         this.ctx.fillText(countdown.toString(), midX, midY + 160);
+        this.drawPlayerArrows(players);
     }
 
     public drawRoundOver(winner?: Player) {
@@ -146,6 +154,63 @@ export class Canvas {
         // @TODO: change font
         this.ctx.font = '30px Arial';
         this.ctx.fillText('WINNER', midX + 75, midY + 160);
+    }
+
+    public drawPlayerArrows = (players: Player[]) => {
+        players.forEach((player) => {
+            this.drawArrow(player.currentPosition, player.direction, player.color);
+        });
+    };
+
+    private drawArrow(start: TPosition, direction: TDirection, color: string) {
+        const headlen = 8;
+
+        // Switch start and from, so we start at the tip of the arrow
+        const toX = start.x - (headlen / 2) * direction.x;
+        const toY = start.y - (headlen / 2) * direction.y;
+        const fromX = start.x - direction.x * BASE_SPEED * 20;
+        const fromY = start.y - direction.y * BASE_SPEED * 20;
+        //variables to be used when creating the arrow
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        const arrowWidth = 2;
+
+        this.ctx.save();
+        this.ctx.strokeStyle = color;
+
+        //starting path of the arrow from the start square to the end square
+        //and drawing the stroke
+        this.ctx.beginPath();
+        this.ctx.moveTo(fromX, fromY);
+        this.ctx.lineTo(toX, toY);
+        this.ctx.lineWidth = arrowWidth;
+        this.ctx.stroke();
+
+        //starting a new path from the head of the arrow to one of the sides of
+        //the point
+        this.ctx.beginPath();
+        this.ctx.moveTo(toX, toY);
+        this.ctx.lineTo(
+            toX - headlen * Math.cos(angle - Math.PI / 7),
+            toY - headlen * Math.sin(angle - Math.PI / 7),
+        );
+
+        //path from the side point of the arrow, to the other side point
+        this.ctx.lineTo(
+            toX - headlen * Math.cos(angle + Math.PI / 7),
+            toY - headlen * Math.sin(angle + Math.PI / 7),
+        );
+
+        //path from the side point back to the tip of the arrow, and then
+        //again to the opposite side point
+        this.ctx.lineTo(toX, toY);
+        this.ctx.lineTo(
+            toX - headlen * Math.cos(angle - Math.PI / 7),
+            toY - headlen * Math.sin(angle - Math.PI / 7),
+        );
+
+        //draws the paths created above
+        this.ctx.stroke();
+        this.ctx.restore();
     }
 
     public didPlayerCollide(player: Player, otherPlayers: Player[]): Collision | undefined {

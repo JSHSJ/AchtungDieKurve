@@ -81,12 +81,14 @@ export class Canvas {
 
     public drawCountdown(countdown: number) {
         this.clear();
-        const midX = this.width / 2 - 75;
+        const midX = this.width / 2;
         const midY = this.height / 2 - 120;
+        this.ctx.textAlign = 'center';
+
         this.ctx.fillStyle = 'red';
         this.ctx.font = '30px Arial';
-        this.ctx.fillText('ROUND STARTS IN', midX - 50, midY + 120);
-        this.ctx.fillText(countdown.toString(), midX + 100, midY + 160);
+        this.ctx.fillText('ROUND STARTS IN', midX, midY + 120);
+        this.ctx.fillText(countdown.toString(), midX, midY + 160);
     }
 
     public drawRoundOver(winner?: Player) {
@@ -102,7 +104,7 @@ export class Canvas {
             this.ctx.fillText('WINNER', midX, midY + 160);
         }
         this.ctx.font = '20px Arial';
-        this.ctx.fillText('- Press space to start the next round - ', midX, midY + 200);
+        this.ctx.fillText('- Press space to continue - ', midX, midY + 200);
     }
 
     public drawWinner(winner: Player) {

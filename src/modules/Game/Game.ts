@@ -13,6 +13,7 @@ enum GameState {
     SETUP = 'SETUP',
     PREGAME = 'PREGAME',
     PREROUND = 'PREROUND',
+    PREROUND_COUNTDOWN = 'PREROUND_COUNTDOWN',
     RUNNING = 'RUNNING',
     ROUND_OVER = 'ROUND_OVER',
     FINISHED = 'FINISHED',
@@ -54,7 +55,7 @@ export class Game extends EventEmitter<TGameEvent> {
             if (this.gameState === GameState.PREROUND && e.key === ' ') {
                 e.preventDefault();
                 e.stopPropagation();
-                this.startRound();
+                this.showPreGameCountDown();
                 return;
             }
         });
@@ -80,11 +81,26 @@ export class Game extends EventEmitter<TGameEvent> {
     }
 
     public startRound() {
+        this.round!.start();
+        this.gameState = GameState.RUNNING;
+    }
+
+    private showPreGameCountDown() {
         if (!this.round) {
             return;
         }
-        this.round.start();
-        this.gameState = GameState.RUNNING;
+        this.gameState = GameState.PREROUND_COUNTDOWN;
+        let countdown = 3;
+        this.canvas.drawCountdown(countdown);
+
+        const interval = setInterval(() => {
+            countdown -= 1;
+            if (countdown === 0) {
+                clearInterval(interval);
+                this.startRound();
+            }
+            this.canvas.drawCountdown(countdown);
+        }, 1000);
     }
 
     private handleRoundEvent(event: RoundEvent) {

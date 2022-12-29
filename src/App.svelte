@@ -8,12 +8,6 @@
     import Logo from "./lib/logo/Logo.svelte";
     import type {TGameEvent, TGameScore} from "./modules/Game/Game.types";
     import {TGameEventTypes} from "./modules/Game/Game.types";
-    import appleTouchIcon from "./assets/favicon/apple-touch-icon.png";
-    import favicon32 from "./assets/favicon/favicon-32x32.png";
-    import favicon16 from "./assets/favicon/favicon-16x16.png";
-    import siteManifest from "./assets/favicon/site.webmanifest";
-    import safariPinnedTab from "./assets/favicon/safari-pinned-tab.svg";
-    import ogImage from './assets/kurveee-og-image.png';
 
     let isOpen = true;
     let disabled = false;
@@ -91,16 +85,7 @@
 </script>
 
 <svelte:head>
-    <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon}>
-    <link rel="icon" type="image/png" sizes="32x32" href={favicon32}>
-    <link rel="icon" type="image/png" sizes="16x16" href={favicon16}>
-    <link rel="manifest" href={siteManifest}>
-    <link rel="mask-icon" href={safariPinnedTab} color="#000000">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-    <meta property="og:title" content="kurveee - the game" />
-    <meta property="og:url" content="https://kurveee.de" />
-    <meta property="og:image" content={ogImage} />
+
 </svelte:head>
 
 <main>

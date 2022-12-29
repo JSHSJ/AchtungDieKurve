@@ -1,3 +1,3 @@
-![kurveee - the game](./src/assets/kurveee-og-image.png)
+![kurveee - the game](public/kurveee-og-image.png)
 
 # AchtungDieKurve

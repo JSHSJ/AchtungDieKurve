@@ -1,6 +1,8 @@
 @import 'open-props/postcss/style';
 @import 'open-props/postcss/normalize';
 @import 'open-props/postcss/buttons';
+@import 'open-props/switch/light';
+@import 'open-props/switch/dark';
 
 @custom-selector :--min-aside fieldset, .score, .action-main, .toggle, .logo, .total-score;
 
@@ -10,6 +12,8 @@ main {
     --padding-minified-aside: calc(var(--size-base) * 1.5);
     inline-size: 100%;
     block-size: 100vh;
+    max-inline-size: 100%;
+    overflow: hidden;
     display: grid;
     grid:
         [main aside score-board] 1fr
@@ -47,6 +51,11 @@ aside {
 
     display: grid;
     grid-template-rows: auto 1fr auto;
+    grid-template:
+        "header" auto
+        "content" 1fr
+        "footer" auto
+        / 1fr;
 
     min-inline-size: 0;
     min-block-size: 0;
@@ -55,14 +64,21 @@ aside {
 
     transition: transform 0.3s ease;
     will-change: transform;
+    transform: translateX(0);
 
     & > * {
         min-block-size: 0;
     }
 
     &:not(.isOpen) {
+        transform: translateX(0);
+
         & :is(:--min-aside) {
             grid-area: stack;
+        }
+
+        & .config-form {
+            display: none;
         }
     }
 
@@ -72,24 +88,13 @@ aside {
     }
 }
 
-.config {
-    transform: translateX(100%);
-
-    &.isOpen {
-        transform: translateX(0);
-    }
-
-    & > header {
-        padding: var(--size-base);
-        border-block-end: var(--border-size-1) solid var(--surface-4);
-    }
-}
 
 /* ---------- HEADER ---------- */
 header {
     display: grid;
     grid-template-columns: 1fr [stack] var(--size-minified-aside);
     align-items: center;
+    grid-area: header;
 }
 
 .logo,
@@ -106,6 +111,10 @@ header {
 }
 
 /* ---------- PLAYERS FORM ---------- */
+.player-form {
+    grid-area: content;
+}
+
 form {
     overflow-y: auto;
 }
@@ -172,6 +181,7 @@ fieldset,
 /* ---------- ACTION BAR ---------- */
 .action-bar {
     display: grid;
+    grid-area: footer;
     grid-template-columns: 1fr [stack] var(--size-minified-aside);
     white-space: nowrap;
 
@@ -198,26 +208,29 @@ fieldset,
     z-index: 2;
 }
 
-.button-round {
-    inline-size: max-content;
-    border-radius: 999px;
-    aspect-ratio: 1;
-    padding: 0.75ch;
-}
+/* ---------- Config ---------- */
 
-.close {
-    place-self: center self-end;
-}
+.config-form {
+    grid-area: content;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    will-change: transform;
 
-.config-content {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--size-base);
     padding: var(--size-base);
     place-content: start;
+    background-color: var(--surface-1);
+    border-block-start: var(--border-size-1) solid var(--surface-4);
+
 
     & > .input-wrapper {
         height: max-content;
+    }
+
+    &.isOpen {
+        transform: translateX(0);
     }
 }
 
@@ -225,4 +238,9 @@ fieldset,
     font-size: var(--font-size-0);
     color: var(--text-1);
     display: block;
+}
+
+.canvas-color-helper {
+    display: none;
+    color: var(--text-1);
 }

@@ -1,9 +1,9 @@
 import type { TPosition } from '../../types/TPosition';
 import type { TDirection } from '../../types/TDirection';
 import { updateRotationValueCos, updateRotationValueSin } from '../../util/updateRotationValue';
-import { BASE_SPEED, FULL_TURNING_RADIUS } from '../../config/config';
 import type { TControls } from '../../types/TControls';
 import { generateUUID } from '../../util/generateUUID';
+import { config } from '../Config/Config';
 
 export type PlayerArgs = {
     id: string;
@@ -49,8 +49,8 @@ export class Player {
 
     public move() {
         if (!this.isAlive) return;
-        this.currentPosition.x += this.direction.x * BASE_SPEED;
-        this.currentPosition.y += this.direction.y * BASE_SPEED;
+        this.currentPosition.x += this.direction.x * config.speed;
+        this.currentPosition.y += this.direction.y * config.speed;
     }
 
     public die() {
@@ -59,13 +59,13 @@ export class Player {
 
     public turn(keys: Set<string> | undefined) {
         if (keys?.has(this.controls.left)) {
-            this.directionControl = this.directionControl + (1 % FULL_TURNING_RADIUS);
+            this.directionControl = this.directionControl + (1 % 1) / config.turningRadius;
 
             this.updateDirection();
         }
         if (keys?.has(this.controls.right)) {
             this.directionControl =
-                this.directionControl === 0 ? FULL_TURNING_RADIUS : this.directionControl - 1;
+                this.directionControl === 0 ? 1 / config.turningRadius : this.directionControl - 1;
             this.updateDirection();
         }
     }

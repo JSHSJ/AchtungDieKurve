@@ -1,14 +1,10 @@
-import {
-    BASE_SPEED,
-    DEFAULT_CANVAS_SIZE,
-    PLAYER_LINE_DASH,
-    PLAYER_WIDTH,
-} from '../../config/config';
+import { DEFAULT_CANVAS_SIZE } from '../../config/config';
 import type { Player } from '../Player/Player';
 import type { TPosition } from '../../types/TPosition';
 import type { Collision } from './Canvas.types';
 import { CollisionType } from './Canvas.types';
 import type { TDirection } from '../../types/TDirection';
+import { config } from '../Config/Config';
 
 export class Canvas {
     public width: number;
@@ -38,7 +34,7 @@ export class Canvas {
         this.ctx.arc(
             player.currentPosition.x,
             player.currentPosition.y,
-            PLAYER_WIDTH,
+            config.playerWidth,
             0,
             Math.PI * 2,
             false,
@@ -50,9 +46,9 @@ export class Canvas {
     public drawPlayerPath = (player: Player) => {
         this.ctx.moveTo(player.startPos.x, player.startPos.y);
         this.ctx.beginPath();
-        this.ctx.setLineDash(PLAYER_LINE_DASH);
+        this.ctx.setLineDash([config.playerLineLength, config.playerGapLength]);
         this.ctx.strokeStyle = player.color;
-        this.ctx.lineWidth = 2 * PLAYER_WIDTH;
+        this.ctx.lineWidth = 2 * config.playerWidth;
         this.ctx.lineCap = 'round';
         this.ctx.stroke(player.path);
         this.ctx.closePath();
@@ -61,7 +57,7 @@ export class Canvas {
     public doesPointCollideWithPath = (
         path: Path2D,
         point: TPosition,
-        lineWidth = PLAYER_WIDTH * 2,
+        lineWidth = config.playerWidth * 2,
     ) => {
         this.ctx.lineWidth = lineWidth;
         return this.ctx.isPointInStroke(path, point.x, point.y);
@@ -163,16 +159,16 @@ export class Canvas {
     };
 
     private drawArrow(start: TPosition, direction: TDirection, color: string) {
-        const headlen = 8;
+        const headlen = config.playerWidth * 3;
+        const arrowWidth = config.playerWidth * 2;
 
         // Switch start and from, so we start at the tip of the arrow
-        const toX = start.x - (headlen / 2) * direction.x;
-        const toY = start.y - (headlen / 2) * direction.y;
-        const fromX = start.x - direction.x * BASE_SPEED * 20;
-        const fromY = start.y - direction.y * BASE_SPEED * 20;
+        const toX = start.x - config.speed * direction.x;
+        const toY = start.y - config.speed * direction.y;
+        const fromX = start.x - direction.x * config.speed * headlen * 3;
+        const fromY = start.y - direction.y * config.speed * headlen * 3;
         //variables to be used when creating the arrow
         const angle = Math.atan2(toY - fromY, toX - fromX);
-        const arrowWidth = 2;
 
         this.ctx.save();
         this.ctx.strokeStyle = color;
@@ -216,10 +212,10 @@ export class Canvas {
     public didPlayerCollide(player: Player, otherPlayers: Player[]): Collision | undefined {
         // player collides with game boundaries
         if (
-            player.currentPosition.x - PLAYER_WIDTH <= 0 ||
-            player.currentPosition.x + PLAYER_WIDTH >= this.width ||
-            player.currentPosition.y - PLAYER_WIDTH <= 0 ||
-            player.currentPosition.y + PLAYER_WIDTH >= this.height
+            player.currentPosition.x - config.playerWidth <= 0 ||
+            player.currentPosition.x + config.playerWidth >= this.width ||
+            player.currentPosition.y - config.playerWidth <= 0 ||
+            player.currentPosition.y + config.playerWidth >= this.height
         ) {
             return {
                 type: CollisionType.WALL_COLLISION,
@@ -229,7 +225,7 @@ export class Canvas {
 
         // player collides with other players
         for (const otherPlayer of otherPlayers) {
-            const lineWidth = player.id === otherPlayer.id ? 1 : PLAYER_WIDTH * 3;
+            const lineWidth = player.id === otherPlayer.id ? 1 : config.playerWidth * 3;
             if (
                 // reduce line with to prevent self collision
                 this.doesPointCollideWithPath(otherPlayer.path, player.currentPosition, lineWidth)

@@ -5,19 +5,9 @@ import type { RoundEvent } from '../Round/Round.types';
 import { RoundEventTypes } from '../Round/Round.types';
 import { setStartParamsForPlayer } from '../../util/setStartParamsForPlayer';
 import type { TGameEvent, TGameScore } from './Game.types';
-import { TGameEventTypes } from './Game.types';
+import { GameState, TGameEventTypes } from './Game.types';
 import { EventEmitter } from '../EventEmitter/EventEmitter';
-import { SCORE_CREDIT_KILLER, SCORE_USE_RANKING } from '../../config/config';
-
-enum GameState {
-    SETUP = 'SETUP',
-    PREGAME = 'PREGAME',
-    PREROUND = 'PREROUND',
-    PREROUND_COUNTDOWN = 'PREROUND_COUNTDOWN',
-    RUNNING = 'RUNNING',
-    ROUND_OVER = 'ROUND_OVER',
-    FINISHED = 'FINISHED',
-}
+import { config } from '../Config/Config';
 
 export class Game extends EventEmitter<TGameEvent> {
     public canvas: Canvas;
@@ -31,7 +21,7 @@ export class Game extends EventEmitter<TGameEvent> {
 
     private gameState = GameState.SETUP;
 
-    constructor(canvas: Canvas, players: Player[], pointGoal = 50) {
+    constructor(canvas: Canvas, players: Player[], pointGoal = 10) {
         super();
         this.canvas = canvas;
         this.players = players;
@@ -116,7 +106,7 @@ export class Game extends EventEmitter<TGameEvent> {
         if (event.type === RoundEventTypes.PLAYER_COLLISION) {
             event.collision.player.die();
 
-            if (SCORE_CREDIT_KILLER) {
+            if (config.scoreCreditKiller) {
                 this.score[event.collision.into.id] += 1;
                 this.emit({
                     type: TGameEventTypes.SCORE_UPDATED,
@@ -160,7 +150,7 @@ export class Game extends EventEmitter<TGameEvent> {
             return;
         }
 
-        if (SCORE_USE_RANKING) {
+        if (config.scoreUseRanking) {
             ranking.forEach((player, index) => {
                 this.score[player.id] += this.players.length - index;
             });

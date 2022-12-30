@@ -55,21 +55,33 @@ aside {
 
     transition: transform 0.3s ease;
     will-change: transform;
-    transform: translateX(0%);
 
     & > * {
         min-block-size: 0;
     }
 
     &:not(.isOpen) {
-        transform: translateX(0%);
         & :is(:--min-aside) {
             grid-area: stack;
         }
     }
 
+
     &:focus-within:not(:has(.toggle:focus)) :is(:--min-aside) {
         grid-area: revert;
+    }
+}
+
+.config {
+    transform: translateX(100%);
+
+    &.isOpen {
+        transform: translateX(0);
+    }
+
+    & > header {
+        padding: var(--size-base);
+        border-block-end: var(--border-size-1) solid var(--surface-4);
     }
 }
 
@@ -184,4 +196,33 @@ fieldset,
 .toggle {
     position: relative;
     z-index: 2;
+}
+
+.button-round {
+    inline-size: max-content;
+    border-radius: 999px;
+    aspect-ratio: 1;
+    padding: 0.75ch;
+}
+
+.close {
+    place-self: center self-end;
+}
+
+.config-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--size-base);
+    padding: var(--size-base);
+    place-content: start;
+
+    & > .input-wrapper {
+        height: max-content;
+    }
+}
+
+.input-description {
+    font-size: var(--font-size-0);
+    color: var(--text-1);
+    display: block;
 }

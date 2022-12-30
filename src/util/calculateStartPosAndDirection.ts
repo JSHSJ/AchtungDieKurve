@@ -1,4 +1,4 @@
-import { FULL_TURNING_RADIUS } from '../config/config';
+import { config } from '../modules/Config/Config';
 
 enum DirectionFactor {
     LEFT = 0.75,
@@ -31,8 +31,8 @@ const getUsefulDirectionControl = (
     const deltaX = startX - centerX;
     const deltaY = startY - centerY;
 
-    const minFactor = getMinimumDirectionFactor(deltaX, deltaY) * FULL_TURNING_RADIUS;
-    const maxFactor = getMaximumDirectionFactor(deltaX, deltaY) * FULL_TURNING_RADIUS;
+    const minFactor = getMinimumDirectionFactor(deltaX, deltaY) * (1 / config.turningRadius);
+    const maxFactor = getMaximumDirectionFactor(deltaX, deltaY) * (1 / config.turningRadius);
 
     return Math.random() * (maxFactor - minFactor) + minFactor;
 };

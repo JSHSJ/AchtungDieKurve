@@ -149,6 +149,10 @@ fieldset {
 
 .input-wrapper {
     display: grid;
+
+    &:has([type="checkbox"]) {
+        grid-template: "label checkbox" / 1fr auto;
+    }
 }
 
 .score {

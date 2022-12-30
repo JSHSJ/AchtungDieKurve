@@ -93,7 +93,7 @@
                 name="options-use-ranking"
                 id="options-use-ranking"
                 required
-                bind:checked={$configStore.scoreCreditKiller}
+                bind:checked={$configStore.scoreUseRanking}
             />
         </div>
     </form>

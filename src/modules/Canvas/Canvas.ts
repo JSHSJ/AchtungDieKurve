@@ -73,7 +73,7 @@ export class Canvas {
         const midY = this.height / 2 - 140;
         // @TODO: Find a way to set this to a better color
         this.ctx.textAlign = 'center';
-        this.ctx.fillStyle = 'red';
+        this.ctx.fillStyle = this.getUIColor();
         this.ctx.font = '30px Arial';
         this.ctx.fillText('Ready?', midX, midY + 120);
 
@@ -88,7 +88,7 @@ export class Canvas {
         const midY = this.height / 2 - 120;
         this.ctx.textAlign = 'center';
 
-        this.ctx.fillStyle = 'red';
+        this.ctx.fillStyle = this.getUIColor();
         this.ctx.font = '30px Arial';
         this.ctx.fillText('ROUND STARTS IN', midX, midY + 120);
         this.ctx.fillText(countdown.toString(), midX, midY + 160);
@@ -101,7 +101,7 @@ export class Canvas {
         this.ctx.textAlign = 'center';
 
         // @TODO: improve this design and color
-        this.ctx.fillStyle = winner?.color || 'red';
+        this.ctx.fillStyle = winner?.color || this.getUIColor();
         this.ctx.font = '30px Arial';
         this.ctx.fillText('ROUND OVER', midX, midY + 120);
         if (winner) {
@@ -238,4 +238,12 @@ export class Canvas {
             }
         }
     }
+
+    private getUIColor = () => {
+        const helperEl = document.querySelector('.canvas-color-helper');
+        if (!helperEl) {
+            return 'red';
+        }
+        return window.getComputedStyle(helperEl).color;
+    };
 }

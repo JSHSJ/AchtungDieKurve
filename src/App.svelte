@@ -8,7 +8,7 @@
     import Logo from "./lib/logo/Logo.svelte";
     import type {TGameEvent, TGameScore} from "./modules/Game/Game.types";
     import {TGameEventTypes} from "./modules/Game/Game.types";
-    import {configStore} from "./stores/config";
+    import ConfigScreen from "./lib/config/ConfigScreen.svelte";
 
     let isOpen = true;
     let isConfigOpen = false;
@@ -102,7 +102,7 @@
                 {totalScore}
             </div>
         </header>
-        <form on:submit|preventDefault={handleSubmit} id="main">
+        <form on:submit|preventDefault={handleSubmit} id="main" class="player-form">
             {#each players as player, idx}
                 <div class="player-row">
                     <fieldset name="player" {disabled}>
@@ -147,6 +147,8 @@
                 </div>
             {/each}
         </form>
+            <ConfigScreen bind:isConfigOpen={isConfigOpen}/>
+
         <div class="action-bar">
             <div class="action-main">
                 <button type="button" class="add" on:click={addPlayerRow}> Add Player</button>
@@ -170,105 +172,5 @@
             </button>
 
         </div>
-    </aside>
-    <aside class="config" class:isOpen={isConfigOpen}>
-        <header>
-            <h2>Config</h2>
-            <button class="button-round close" on:click={() => isConfigOpen = false} aria-label="close config screen">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"
-                          d="m10 90 80-80M90 90 10 10"/>
-                </svg>
-            </button>
-        </header>
-        <form class="config-content">
-            <div class="input-wrapper">
-                <label for="options-speed">
-                    <span>Speed</span>
-                    <span class="input-description">Speed at which the player moves</span>
-                </label>
-                <input
-                    type="number"
-                    name="options-speed"
-                    id="options-speed"
-                    required
-                    bind:value={$configStore.speed}
-                />
-            </div>
-
-            <div class="input-wrapper">
-                <label for="options-turning-radius">
-                    <span>Turning Radius</span>
-                    <span class="input-description">Speed at which the player turns</span></label>
-                <input
-                    type="number"
-                    name="options-turning-radius"
-                    id="options-turning-radius"
-                    required
-                    step="0.001"
-                    bind:value={$configStore.turningRadius}
-                />
-            </div>
-            <div class="input-wrapper">
-                <label for="options-player-width">
-                    <span>Player width</span>
-                    <span class="input-description">Thickness of drawn lines</span></label>
-                <input
-                    type="number"
-                    name="options-player-width"
-                    id="options-player-width"
-                    required
-                    bind:value={$configStore.playerWidth}
-                />
-            </div>
-            <div class="input-wrapper">
-                <label for="options-line-length">
-                    <span>Line Length</span>
-                    <span class="input-description">Length of drawn line, before a gap occurs</span></label>
-                <input
-                    type="number"
-                    name="options-line-length"
-                    id="options-line-length"
-                    required
-                    bind:value={$configStore.playerLineLength}
-                />
-            </div>
-            <div class="input-wrapper">
-                <label for="options-gap-length">
-                    <span>Gap Length</span>
-                    <span class="input-description">Length of gap</span></label>
-                <input
-                    type="number"
-                    name="options-gap-length"
-                    id="options-gap-length"
-                    required
-                    bind:value={$configStore.playerGapLength}
-                />
-            </div>
-            <div class="input-wrapper">
-                <label for="options-credit-killer">
-                    <span>Credit Player kills</span>
-                    <span class="input-description">Add a point to the killer, when a player runs into another players line</span></label>
-                <input
-                    type="checkbox"
-                    name="options-credit-killer"
-                    id="options-credit-killer"
-                    required
-                    bind:checked={$configStore.scoreCreditKiller}
-                />
-            </div>
-            <div class="input-wrapper">
-                <label for="options-use-ranking">
-                    <span>Score based on ranking</span>
-                    <span class="input-description">Add points based on ranking. First player gets most points, last gets one.</span></label>
-                <input
-                    type="checkbox"
-                    name="options-use-ranking"
-                    id="options-use-ranking"
-                    required
-                    bind:checked={$configStore.scoreCreditKiller}
-                />
-            </div>
-        </form>
     </aside>
 </main>

@@ -81,6 +81,10 @@ aside {
         & .config-form {
             display: none;
         }
+
+        & .player-form {
+            overflow-X: hidden;
+        }
     }
 
 

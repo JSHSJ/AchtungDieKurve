@@ -51,9 +51,9 @@ export const drawText = (
 ) => {
     const totalHeight = textBlocks.reduce(
         (acc, block, idx) =>
-            acc + getTextBlockHeight(block) + idx === textBlocks.length - 1
-                ? 0
-                : getTextBlockGap(block),
+            acc +
+            getTextBlockHeight(block) +
+            (idx === textBlocks.length - 1 ? 0 : getTextBlockGap(block)),
         0,
     );
     let currentY = centerY - totalHeight / 2;

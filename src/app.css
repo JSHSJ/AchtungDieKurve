@@ -52,7 +52,8 @@ aside {
     display: grid;
     grid-template-rows: auto 1fr auto;
     grid-template:
-        "header" auto
+    /* fix header height to prevent layout shift */
+        "header" var(--size-10)
         "content" 1fr
         "footer" auto
         / 1fr;
@@ -96,7 +97,7 @@ aside {
 header {
     display: grid;
     grid-template-columns: 1fr [stack] var(--size-minified-aside);
-    align-items: center;
+    place-content: center;
     grid-area: header;
 }
 
@@ -107,6 +108,8 @@ header {
     font-size: var(--font-size-fluid-1);
     line-height: var(--font-lineheight-1);
     text-align: center;
+    display: grid;
+    place-content: center;
 }
 
 .total-score {

@@ -8,8 +8,8 @@
 
 
 </script>
-    <form class="config-content config-form" class:isOpen={isConfigOpen}>
-        <ColorThemeSwitch/>
+    <form class="config-content config-form" class:isOpen={isConfigOpen} tabIndex={tabindex}>
+        <ColorThemeSwitch tabIndex={tabindex} />
 
         <div class="input-wrapper">
             <label for="options-speed">

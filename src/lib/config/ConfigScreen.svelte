@@ -4,6 +4,8 @@
 
     export let isConfigOpen = false;
 
+    $: tabindex = isConfigOpen ? 0 : -1;
+
 
 </script>
     <form class="config-content config-form" class:isOpen={isConfigOpen}>
@@ -20,6 +22,7 @@
                 id="options-speed"
                 required
                 bind:value={$configStore.speed}
+                tabindex={tabindex}
             />
         </div>
 
@@ -34,6 +37,7 @@
                 required
                 step="0.001"
                 bind:value={$configStore.turningRadius}
+                tabindex={tabindex}
             />
         </div>
         <div class="input-wrapper">
@@ -46,6 +50,7 @@
                 id="options-player-width"
                 required
                 bind:value={$configStore.playerWidth}
+                tabindex={tabindex}
             />
         </div>
         <div class="input-wrapper">
@@ -58,6 +63,7 @@
                 id="options-line-length"
                 required
                 bind:value={$configStore.playerLineLength}
+                tabindex={tabindex}
             />
         </div>
         <div class="input-wrapper">
@@ -70,6 +76,7 @@
                 id="options-gap-length"
                 required
                 bind:value={$configStore.playerGapLength}
+                tabindex={tabindex}
             />
         </div>
         <div class="input-wrapper">
@@ -82,6 +89,7 @@
                 id="options-credit-killer"
                 required
                 bind:checked={$configStore.scoreCreditKiller}
+                tabindex={tabindex}
             />
         </div>
         <div class="input-wrapper">
@@ -94,6 +102,7 @@
                 id="options-use-ranking"
                 required
                 bind:checked={$configStore.scoreUseRanking}
+                tabindex={tabindex}
             />
         </div>
     </form>

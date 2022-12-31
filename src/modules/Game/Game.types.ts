@@ -2,6 +2,7 @@ import type { Player } from '../Player/Player';
 
 export enum TGameEventTypes {
     SCORE_UPDATED = 'SCORE_UPDATED',
+    GAME_STARTED = 'GAME_STARTED',
 }
 
 export enum GameState {
@@ -14,11 +15,15 @@ export enum GameState {
     FINISHED = 'FINISHED',
 }
 
-export type TGameEvent = TGameScoreUpdateEvent;
+export type TGameEvent = TGameScoreUpdateEvent | TGameStartEvent;
 
 export type TGameScore = Record<Player['id'], number>;
 
 export type TGameScoreUpdateEvent = {
     type: TGameEventTypes.SCORE_UPDATED;
     score: TGameScore;
+};
+
+export type TGameStartEvent = {
+    type: TGameEventTypes.GAME_STARTED;
 };

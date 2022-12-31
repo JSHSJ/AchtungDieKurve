@@ -9,14 +9,14 @@
     import type {TGameEvent, TGameScore} from "./modules/Game/Game.types";
     import {TGameEventTypes} from "./modules/Game/Game.types";
     import ConfigScreen from "./lib/config/ConfigScreen.svelte";
-
-    let isOpen = true;
-    let isConfigOpen = false;
-    let disabled = false;
+    import {closeMenu, isMenuDisabled, isMenuOpen} from "./stores/gameMenu";
+    import {isConfigMenuOpen, toggleMenu} from "./stores/gameMenu.js";
 
 
     let game: Game;
     let canvas: Canvas;
+
+    $: isMenuOpen
 
     const initPlayer: (
         initColor: Player['color'],
@@ -63,9 +63,6 @@
     }
 
     function handleSubmit() {
-        isOpen = false;
-        disabled = true;
-
         if (game) {
             game.reset();
             game.prepareNewRound();
@@ -82,6 +79,9 @@
             if (e.type === TGameEventTypes.SCORE_UPDATED) {
                 scoreboard = e.score;
             }
+            if (e.type === TGameEventTypes.GAME_STARTED) {
+                closeMenu();
+            }
         })
         game.prepareNewRound();
     }
@@ -95,7 +95,7 @@
     <section>
         <canvas/>
     </section>
-    <aside class:isOpen>
+    <aside class:isOpen={$isMenuOpen}>
         <header>
             <Logo/>
             <div class="total-score">
@@ -105,7 +105,7 @@
         <form on:submit|preventDefault={handleSubmit} id="main" class="player-form">
             {#each players as player, idx}
                 <div class="player-row">
-                    <fieldset name="player" {disabled}>
+                    <fieldset name="player" disabled={$isMenuDisabled || undefined}>
                         <input type="color" name="player[{idx}][color]" bind:value={player.color}/>
                         <div class="input-wrapper">
                             <label for="player[{idx}][name]">Your name</label>
@@ -147,7 +147,7 @@
                 </div>
             {/each}
         </form>
-            <ConfigScreen bind:isConfigOpen={isConfigOpen}/>
+            <ConfigScreen bind:isConfigOpen={$isConfigMenuOpen}/>
 
         <div class="action-bar">
             <div class="action-main">
@@ -156,7 +156,7 @@
                 <button
                 type="button"
                 class="toggle"
-                on:click={() => (isConfigOpen = !isConfigOpen)}
+                on:click={() => isConfigMenuOpen.update((v) => !v)}
                 tabindex="0"
             >
                 Config
@@ -165,7 +165,7 @@
             <button
                 type="button"
                 class="toggle"
-                on:click={() => (isOpen = !isOpen)}
+                on:click={toggleMenu}
                 tabindex="0"
             >
                 Toggle

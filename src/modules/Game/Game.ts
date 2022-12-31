@@ -72,6 +72,9 @@ export class Game extends EventEmitter<TGameEvent> {
             setStartParamsForPlayer(player, this.canvas.width, this.canvas.height);
         });
         this.canvas.drawPreRound(this.players);
+        this.emit({
+            type: TGameEventTypes.GAME_STARTED,
+        });
     }
 
     public startRound() {

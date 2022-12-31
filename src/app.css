@@ -83,9 +83,12 @@ aside {
     }
 
 
+    /*
+    This prevents the menu from closing on start
     &:focus-within:not(:has(.toggle:focus)) :is(:--min-aside) {
         grid-area: revert;
     }
+     */
 }
 
 

@@ -5,6 +5,8 @@ import type { Collision } from './Canvas.types';
 import { CollisionType } from './Canvas.types';
 import type { TDirection } from '../../types/TDirection';
 import { config } from '../Config/Config';
+import type { TTextBlock } from './CanvasText';
+import { drawText, getUIColor, TextBlockSize } from './CanvasText';
 
 export class Canvas {
     public width: number;
@@ -69,53 +71,67 @@ export class Canvas {
 
     public drawPreRound(players: Player[]) {
         this.clear();
-        const midX = this.width / 2;
-        const midY = this.height / 2 - 140;
-        // @TODO: Find a way to set this to a better color
-        this.ctx.textAlign = 'center';
-        this.ctx.fillStyle = this.getUIColor();
-        this.ctx.font = '30px Arial';
-        this.ctx.fillText('Ready?', midX, midY + 120);
-
-        this.ctx.font = '20px Arial';
-        this.ctx.fillText('- Press space to start the next round - ', midX, midY + 200);
+        const textBlocks: TTextBlock[] = [
+            {
+                text: 'Ready?',
+                color: getUIColor(),
+                size: TextBlockSize.Big,
+            },
+            {
+                text: '- Press space to start the next round -',
+                color: getUIColor(),
+                size: TextBlockSize.Small,
+            },
+        ];
+        this.drawText(textBlocks);
         this.drawPlayerArrows(players);
     }
 
     public drawCountdown(countdown: number, players: Player[]) {
         this.clear();
-        const midX = this.width / 2;
-        const midY = this.height / 2 - 120;
-        this.ctx.textAlign = 'center';
-
-        this.ctx.fillStyle = this.getUIColor();
-        this.ctx.font = '30px Arial';
-        this.ctx.fillText('ROUND STARTS IN', midX, midY + 120);
-        this.ctx.fillText(countdown.toString(), midX, midY + 160);
+        const textBlocks: TTextBlock[] = [
+            {
+                text: 'Round starts in...',
+                color: getUIColor(),
+                size: TextBlockSize.Small,
+            },
+            {
+                text: countdown.toString(),
+                color: getUIColor(),
+                size: TextBlockSize.Big,
+            },
+        ];
+        this.drawText(textBlocks);
         this.drawPlayerArrows(players);
     }
 
     public drawRoundOver(winner?: Player) {
-        const midX = this.width / 2;
-        const midY = this.height / 2 - 120;
-        this.ctx.textAlign = 'center';
-
-        // @TODO: improve this design and color
-        this.ctx.fillStyle = winner?.color || this.getUIColor();
-        this.ctx.font = '30px Arial';
-        this.ctx.fillText('ROUND OVER', midX, midY + 120);
+        const textBlocks: TTextBlock[] = [
+            {
+                text: 'Round over!',
+                color: getUIColor(),
+                size: TextBlockSize.Small,
+            },
+        ];
         if (winner) {
-            this.ctx.fillText('WINNER', midX, midY + 160);
+            textBlocks.push({
+                text: `${winner.name} won!`,
+                color: winner.color,
+                size: TextBlockSize.Big,
+            });
         }
-        this.ctx.font = '20px Arial';
-        this.ctx.fillText('- Press space to continue - ', midX, midY + 200);
+        textBlocks.push({
+            text: '- Press space to continue -',
+            color: getUIColor(),
+            size: TextBlockSize.Small,
+        });
+        this.drawText(textBlocks);
     }
 
     public drawWinner(winner: Player) {
         this.clear();
         const midX = this.width / 2 - 75;
         const midY = this.height / 2 - 120;
-        this.ctx.textAlign = 'center';
         this.ctx.fillStyle = winner.color;
         this.ctx.beginPath();
         this.ctx.moveTo(midX + 75, midY + 40);
@@ -147,9 +163,14 @@ export class Canvas {
         );
         this.ctx.bezierCurveTo(midX + 85, midY + 25, midX + 75, midY + 37, midX + 75, midY + 40);
         this.ctx.fill();
-        // @TODO: change font
-        this.ctx.font = '30px Arial';
-        this.ctx.fillText('WINNER', midX + 75, midY + 160);
+        const textBlocks: TTextBlock[] = [
+            {
+                text: `${winner.name} won!`,
+                color: winner.color,
+                size: TextBlockSize.Big,
+            },
+        ];
+        this.drawText(textBlocks, midX + 75, midY + 200);
     }
 
     public drawPlayerArrows = (players: Player[]) => {
@@ -239,11 +260,7 @@ export class Canvas {
         }
     }
 
-    private getUIColor = () => {
-        const helperEl = document.querySelector('.canvas-color-helper');
-        if (!helperEl) {
-            return 'red';
-        }
-        return window.getComputedStyle(helperEl).color;
-    };
+    private drawText(textBlocks: TTextBlock[], midX = this.width / 2, midY = this.height / 2) {
+        drawText(this.ctx, textBlocks, midX, midY);
+    }
 }

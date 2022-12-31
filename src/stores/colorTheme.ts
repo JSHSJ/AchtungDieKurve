@@ -21,5 +21,5 @@ const htmlElement = document.documentElement;
 colorThemeStore.subscribe((colorTheme) => {
     const newValue = colorTheme === ColorTheme.Adaptive ? '' : colorTheme.toLowerCase();
     htmlElement.setAttribute('data-theme', newValue);
-    localStorage.setItem('colorTheme', newValue);
+    localStorage.setItem('colorTheme', colorTheme);
 });

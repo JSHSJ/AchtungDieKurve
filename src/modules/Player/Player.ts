@@ -4,6 +4,7 @@ import { updateRotationValueCos, updateRotationValueSin } from '../../util/updat
 import type { TControls } from '../../types/TControls';
 import { generateUUID } from '../../util/generateUUID';
 import { config } from '../Config/Config';
+import { calculateFullTurnRadius } from '../../util/calculateFullTurnRadius';
 
 export type PlayerArgs = {
     id: string;
@@ -59,13 +60,16 @@ export class Player {
 
     public turn(keys: Set<string> | undefined) {
         if (keys?.has(this.controls.left)) {
-            this.directionControl = this.directionControl + (1 % 1) / config.turningRadius;
+            this.directionControl =
+                this.directionControl + (1 % calculateFullTurnRadius(config.turningRadius));
 
             this.updateDirection();
         }
         if (keys?.has(this.controls.right)) {
             this.directionControl =
-                this.directionControl === 0 ? 1 / config.turningRadius : this.directionControl - 1;
+                this.directionControl === 0
+                    ? calculateFullTurnRadius(config.turningRadius)
+                    : this.directionControl - 1;
             this.updateDirection();
         }
     }

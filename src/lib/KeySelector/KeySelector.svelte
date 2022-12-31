@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {disallowedKeys, mapDisplayKey} from "./KeyUtils";
+    import { disallowedKeys, mapDisplayKey } from './KeyUtils';
 
     export let value: string;
     export let id: string;
@@ -9,24 +9,23 @@
 
     /** Selects the text inside a text node when the node is focused */
     const clearOnFocus = (node: HTMLInputElement) => {
+        const handleFocus = (event) => {
+            displayValue = '<Press a key...>';
+        };
 
-        const handleFocus = event => {
-            displayValue = "<Press a key...>";
-        }
-
-        node.addEventListener('focus', handleFocus)
+        node.addEventListener('focus', handleFocus);
 
         return {
             destroy() {
-                node.removeEventListener('focus', handleFocus)
-            }
-        }
-    }
+                node.removeEventListener('focus', handleFocus);
+            },
+        };
+    };
 
     const blurOnInput = (node: HTMLInputElement) => {
-        const handleKey = event => {
+        const handleKey = (event) => {
             event.preventDefault();
-            if (event.key === "Escape") {
+            if (event.key === 'Escape') {
                 node.blur();
                 displayValue = mapDisplayKey(value);
                 return;
@@ -40,27 +39,25 @@
             value = event.key;
             displayValue = mapDisplayKey(value);
 
-            node.blur()
-        }
+            node.blur();
+        };
 
-        node.addEventListener('keydown', handleKey)
+        node.addEventListener('keydown', handleKey);
 
         return {
             destroy() {
-                node.removeEventListener('keydown', handleKey)
-            }
-        }
-    }
-
-
+                node.removeEventListener('keydown', handleKey);
+            },
+        };
+    };
 </script>
 
 <input
     type="text"
-    name={name}
-    id={id}
+    name="{name}"
+    id="{id}"
     required
-    bind:value={displayValue}
+    bind:value="{displayValue}"
     use:blurOnInput
     use:clearOnFocus
 />

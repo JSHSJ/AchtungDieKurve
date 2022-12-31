@@ -3,4 +3,4 @@ export const generateUUID = (prefix: string = '') => {
         return `${prefix}-${Math.random().toString()}`;
     }
     return `${prefix}-${crypto.randomUUID()}`;
-}
+};

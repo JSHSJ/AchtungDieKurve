@@ -1,54 +1,53 @@
 name: Build and deploy
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
+    push:
+        branches: [main]
+    workflow_dispatch:
 
 jobs:
-  Build-and-Deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16]
-    steps:
-      - uses: actions/checkout@v3
+    Build-and-Deploy:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16]
+        steps:
+            - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 7
-          run_install: false
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              id: pnpm-install
+              with:
+                  version: 7
+                  run_install: false
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              run: |
+                  echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
 
-      - name: Install lftp
-        run: sudo apt install lftp
+            - name: Install lftp
+              run: sudo apt install lftp
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Build
-        run: |
-          pnpm build
-          touch ./dist/.nojekyll
+            - name: Build
+              run: |
+                  pnpm build
+                  touch ./dist/.nojekyll
 
-      - name: Deploy to FTP
-        run: lftp -e "open ${{ secrets.FTP_USERNAME }}.kasserver.com; user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; mirror -X .* -X .*/ --reverse --verbose --delete ./dist/ /kurveee.de/; bye"
+            - name: Deploy to FTP
+              run: lftp -e "open ${{ secrets.FTP_USERNAME }}.kasserver.com; user ${{ secrets.FTP_USERNAME }} ${{ secrets.FTP_PASSWORD }}; mirror -X .* -X .*/ --reverse --verbose --delete ./dist/ /kurveee.de/; bye"

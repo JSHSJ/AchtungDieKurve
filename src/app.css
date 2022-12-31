@@ -19,7 +19,8 @@ main {
         [main aside score-board] 1fr
         / [main-start] 11fr [aside-start] max-content [main-end score-board] var(
             --size-minified-aside
-        ) [aside-end];
+        )
+        [aside-end];
 
     & > * {
         min-inline-size: 0;
@@ -53,9 +54,9 @@ aside {
     grid-template-rows: auto 1fr auto;
     grid-template:
     /* fix header height to prevent layout shift */
-        "header" var(--size-10)
-        "content" 1fr
-        "footer" auto
+        'header' var(--size-10)
+        'content' 1fr
+        'footer' auto
         / 1fr;
 
     min-inline-size: 0;
@@ -83,10 +84,9 @@ aside {
         }
 
         & .player-form {
-            overflow-X: hidden;
+            overflow-x: hidden;
         }
     }
-
 
     /*
     This prevents the menu from closing on start
@@ -95,7 +95,6 @@ aside {
     }
      */
 }
-
 
 /* ---------- HEADER ---------- */
 header {
@@ -160,8 +159,8 @@ fieldset {
 .input-wrapper {
     display: grid;
 
-    &:has([type="checkbox"]) {
-        grid-template: "label checkbox" / 1fr auto;
+    &:has([type='checkbox']) {
+        grid-template: 'label checkbox' / 1fr auto;
     }
 }
 
@@ -237,7 +236,6 @@ fieldset,
     place-content: start;
     background-color: var(--surface-1);
     border-block-start: var(--border-size-1) solid var(--surface-4);
-
 
     & > .input-wrapper {
         height: max-content;

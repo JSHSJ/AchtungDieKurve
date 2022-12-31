@@ -109,7 +109,7 @@ export class Game extends EventEmitter<TGameEvent> {
         if (event.type === RoundEventTypes.PLAYER_COLLISION) {
             event.collision.player.die();
 
-            if (config.scoreCreditKiller) {
+            if (config.scoreCreditKiller && event.collision.player !== event.collision.into) {
                 this.score[event.collision.into.id] += 1;
                 this.emit({
                     type: TGameEventTypes.SCORE_UPDATED,

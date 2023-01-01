@@ -54,16 +54,10 @@
 
 <input
     type="text"
-    name="{name}"
-    id="{id}"
+    name={name}
+    id={id}
     required
-    bind:value="{displayValue}"
+    bind:value={displayValue}
     use:blurOnInput
     use:clearOnFocus
 />
-
-<style>
-    input {
-        min-width: var(--size-12);
-    }
-</style>

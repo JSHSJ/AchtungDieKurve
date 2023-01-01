@@ -7,7 +7,12 @@
     $: tabindex = isConfigOpen ? 0 : -1;
 </script>
 
-<form class="config-content config-form" class:isOpen="{isConfigOpen}" tabIndex="{tabindex}">
+<h2>Config</h2>
+<form
+    class="config-content config-form stack"
+    class:isOpen="{isConfigOpen}"
+    tabIndex="{tabindex}"
+>
     <ColorThemeSwitch tabIndex="{tabindex}" />
 
     <div class="input-wrapper">

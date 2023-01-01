@@ -12,6 +12,8 @@
     import { closeMenu, isMenuDisabled, isMenuOpen } from './stores/gameMenu';
     import { isConfigMenuOpen, toggleMenu } from './stores/gameMenu.js';
     import KeySelector from './lib/KeySelector/KeySelector.svelte';
+    import SvgPlayCircleSolid from './lib/icons/SvgPlayCircleSolid.svelte';
+    import SvgSlidersHSolid from './lib/icons/SvgSlidersHSolid.svelte';
 
     let game: Game;
     let canvas: Canvas;
@@ -82,84 +84,137 @@
     }
 </script>
 
-<svelte:head />
+<svelte:head>kurveee zatacka - Achtung, die Kurve!</svelte:head>
 
 <main>
-    <section>
+    <header>
+        <Logo />
+    </header>
+    <section class="board">
         <canvas></canvas>
     </section>
-    <aside class:isOpen="{$isMenuOpen}">
-        <header>
-            <Logo />
-            <div class="total-score">
-                {totalScore}
-            </div>
-        </header>
-        <form on:submit|preventDefault="{handleSubmit}" id="main" class="player-form">
-            {#each players as player, idx}
-                <div class="player-row">
-                    <fieldset name="player" disabled="{$isMenuDisabled || undefined}">
-                        <input
-                            type="color"
-                            name="player[{idx}][color]"
-                            bind:value="{player.color}"
-                        />
-                        <div class="input-wrapper">
-                            <label for="player[{idx}][name]">Your name</label>
-                            <input
-                                type="text"
-                                required
-                                name="player[{idx}][name]"
-                                id="player[{idx}][name]"
-                                bind:value="{player.name}"
-                            />
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="player[{idx}][controls][left]">Left</label>
-                            <KeySelector
-                                name="player[{idx}][controls][left]"
-                                bind:value="{player.controls.left}"
-                                id="player[{idx}][controls][left]"
-                            />
-                        </div>
-                        <div class="input-wrapper">
-                            <label for="player[{idx}][controls][right]">Right</label>
-                            <KeySelector
-                                name="player[{idx}][controls][right]"
-                                bind:value="{player.controls.right}"
-                                id="player[{idx}][controls][right]"
-                            />
-                        </div>
-                    </fieldset>
-                    <div class="score">
-                        <Score
-                            score="{scoreboard[player.id] ?? 0}"
-                            totalScore="{totalScore}"
-                            color="{player.color}"
-                        />
-                        <span>{player.name ?? 'unnamed'}</span>
-                    </div>
-                </div>
+    <output>
+        <ul class="score-board">
+            <li class="score">
+                <Score
+                    score="{totalScore}"
+                    totalScore="{totalScore}"
+                    color="rba(0,0,0,0)"
+                />
+                <span>Total</span>
+            </li>
+            {#each players as player}
+                <li class="score">
+                    <Score
+                        score="{scoreboard[player.id] ?? 0}"
+                        totalScore="{totalScore}"
+                        color="{player.color}"
+                    />
+                    <span>{player.name ?? 'unnamed'}</span>
+                </li>
             {/each}
-        </form>
-        <ConfigScreen bind:isConfigOpen="{$isConfigMenuOpen}" />
-
-        <div class="action-bar">
-            <div class="action-main">
-                <button type="button" class="add" on:click="{addPlayerRow}"> Add Player</button>
-                <button type="submit" class="start" form="main">Start</button>
+            <li>
                 <button
                     type="button"
                     class="toggle"
-                    on:click="{() => isConfigMenuOpen.update((v) => !v)}"
-                    tabindex="0"
+                    on:click="{toggleMenu}"
                 >
-                    Config
+                    Toggle
                 </button>
-            </div>
-            <button type="button" class="toggle" on:click="{toggleMenu}" tabindex="0">
+            </li>
+        </ul>
+    </output>
+    <aside class:isOpen="{$isMenuOpen}">
+        <div class="tabs">
+            <section class="tab" id="players">
+                <h2>Players</h2>
+                <form
+                    on:submit|preventDefault={handleSubmit}
+                    id="main"
+                    class="player-form stack"
+                >
+                    {#each players as player, idx}
+                        <fieldset name="player" disabled="{$isMenuDisabled || undefined}">
+                            <div class="input-wrapper">
+                                <label for="player[{idx}][color]">Color</label>
+                                <input
+                                    type="color"
+                                    name="player[{idx}][color]"
+                                    id="player[{idx}][color]"
+                                    bind:value="{player.color}"
+                                />
+                            </div>
+                            <div class="input-wrapper name">
+                                <label for="player[{idx}][name]">Your name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    name="player[{idx}][name]"
+                                    id="player[{idx}][name]"
+                                    bind:value="{player.name}"
+                                />
+                            </div>
+                            <div class="controls">
+                                <div class="input-wrapper">
+                                    <label for="player[{idx}][controls][left]">Left</label>
+                                    <KeySelector
+                                        name="player[{idx}][controls][left]"
+                                        bind:value="{player.controls.left}"
+                                        id="player[{idx}][controls][left]"
+                                    />
+                                </div>
+                                <div class="input-wrapper">
+                                    <label for="player[{idx}][controls][right]">Right</label>
+                                    <KeySelector
+                                        name="player[{idx}][controls][right]"
+                                        bind:value="{player.controls.right}"
+                                        id="player[{idx}][controls][right]"
+                                    />
+                                </div>
+                            </div>
+                        </fieldset>
+                    {/each}
+                    <button type="button" on:click={addPlayerRow}>
+                        Add Player
+                    </button>
+                    <button
+                        type="submit"
+                        class="start"
+                        form="main"
+                    >
+                        Start
+                    </button>
+                </form>
+            </section>
+            <section class="tab" id="config">
+                <ConfigScreen bind:isConfigOpen="{$isConfigMenuOpen}" />
+            </section>
+        </div>
+        <nav>
+            <a
+                href="#players"
+                on:click="{() => isConfigMenuOpen.update((v) => !v)}"
+                tabindex="0"
+            >
+                <SvgPlayCircleSolid />
+                Players
+            </a>
+            <a
+                href="#config"
+                on:click="{() => isConfigMenuOpen.update((v) => !v)}"
+                tabindex="0"
+            >
+                <SvgSlidersHSolid />
+                Config
+            </a>
+            <button
+                type="button"
+                class="toggle"
+                on:click="{toggleMenu}"
+                tabindex="0"
+            >
                 Toggle
             </button>
-        </div>
+        </nav>
     </aside>
 </main>

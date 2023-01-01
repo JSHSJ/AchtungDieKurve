@@ -7,9 +7,14 @@
     ></path>
 </svg>
 
-<style>
+<style lang="postcss">
     svg {
-        width: auto;
-        height: 100%;
+        inline-size: auto;
+        inline-size: var(--size-12);
+        block-size: 100%;
+
+        @media (--md-n-above) {
+            inline-size: var(--size-12);
+        }
     }
 </style>

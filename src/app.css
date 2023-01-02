@@ -14,7 +14,7 @@
 
 body {
     --space-away: var(--size-3);
-    --space-near: calc(var(--size-2) / 2);
+    --space-near: calc(var(--size-2));
 
     @media (--lg-n-above) {
         --space-away: var(--size-fluid-3);
@@ -32,10 +32,6 @@ body {
 svg {
     fill: currentColor;
     inline-size: var(--size-6);
-}
-
-main {
-    --padding-edge: max(var(--size-3), var(--space-away));
 }
 
 @custom-selector :--card ouput;
@@ -56,7 +52,7 @@ main {
     /* gap: var(--gap); */
 
     overflow-y: auto;
-    overscroll-behavior-block: contain;
+    /* overscroll-behavior-block: contain; */
     scroll-snap-type: block proximity;
     /* scroll-padding-block: var(--gap); */
 
@@ -229,7 +225,7 @@ aside {
 
 .tab {
     inline-size: 100%;
-    padding-inline: var(--padding-edge);
+    padding-inline: var(--space-away);
     padding-block: var(--space-away);
 
     @media (--lg-n-above) {
@@ -238,7 +234,6 @@ aside {
     }
 
     scroll-snap-align: start;
-    overscroll-behavior-y: contain;
 
     & h2 {
         margin-block-end: var(--space-near);
@@ -248,13 +243,15 @@ aside {
 }
 
 nav {
+    position: sticky;
+    bottom: 0;
     background-color: var(--surface-1);
     display: flex;
     align-items: center;
     gap: var(--space-away);
     /* padding-block-end: env(safe-area-inset-bottom, 16px); */
-    padding-inline: var(--padding-edge);
-    padding-block-end: var(--padding-edge);
+    padding-inline: var(--space-away);
+    padding-block-end: var(--space-away);
 
     @media (--lg-n-above) {
         padding-inline: 0;
@@ -281,7 +278,7 @@ nav {
 output {
     grid-area: output;
     inline-size: 100%;
-    padding-inline: var(--padding-edge);
+    padding-inline: var(--space-away);
     padding-block-end: var(--space-away);
     /* padding-block-end: env(safe-area-inset-bottom, 16px); */
 

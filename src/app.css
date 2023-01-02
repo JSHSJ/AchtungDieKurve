@@ -13,8 +13,13 @@
 }
 
 body {
-    --space-away: var(--size-fluid-2);
-    --space-near: calc(var(--size-fluid-2) / 2);
+    --space-away: var(--size-3);
+    --space-near: calc(var(--size-2) / 2);
+
+    @media (--lg-n-above) {
+        --space-away: var(--size-fluid-3);
+        --space-near: calc(var(--size-fluid-2) / 2);
+    }
 }
 
 @custom-selector :--density-shift-1 .score, .input-wrapper;
@@ -31,13 +36,9 @@ svg {
 
 main {
     --padding-edge: max(var(--size-3), var(--space-away));
-
-    @media (--lg-n-above) {
-        padding: var(--padding-edge);
-    }
 }
 
-@custom-selector :--card ouput, canvas;
+@custom-selector :--card ouput;
 
 :--card {
     border: var(--border-size-1) solid var(--surface-4);
@@ -45,7 +46,26 @@ main {
     padding: var(--space-near);
 }
 
-@custom-selector :--scroll-snap-x ul.score-board, .tabs;
+@custom-selector :--scroll-snap-y .tabs;
+
+:--scroll-snap-y {
+    --gap: var(--space-near);
+    display: grid;
+    grid-auto-flow: row;
+    grid-auto-columns: 100%;
+    /* gap: var(--gap); */
+
+    overflow-y: auto;
+    overscroll-behavior-block: contain;
+    scroll-snap-type: block proximity;
+    /* scroll-padding-block: var(--gap); */
+
+    @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+    }
+}
+
+@custom-selector :--scroll-snap-x ul.score-board;
 
 :--scroll-snap-x {
     --gap: var(--space-near);
@@ -98,9 +118,10 @@ main {
     }
 
     @media (--lg-n-above) {
-        grid: "header output aside" auto
+        grid: "canvas header header" auto
               "canvas output aside" 1fr
               / 2fr auto 1fr;
+        justify-items: start;
     }
 }
 
@@ -108,13 +129,19 @@ header {
     grid-area: header;
     padding: var(--space-near);
     padding-block-end: 0;
+
+    @media (--lg-n-above) {
+        padding: 0;
+        padding-block-start: var(--space-away);
+        padding-inline-end: var(--space-away);
+    }
 }
 
 .board {
     grid-area: canvas;
     inline-size: 100%;
     margin-inline: auto;
-    padding-inline: var(--padding-edge);
+    padding-inline: var(--space-near);
 
     @media (--lg-n-above) {
         padding-inline: 0;
@@ -126,9 +153,17 @@ canvas {
     max-block-size: 100%;
     block-size: 100%;
     margin-inline: auto;
+    padding: 0;
+    background-color: var(--surface-2);
+    border-radius: var(--radius-2);
 
-    @media (--landscape) {
+    /* @media (--landscape) {
         aspect-ratio: 1/1;
+    } */
+
+    @media (--lg-n-above) {
+        border-radius: 0;
+        margin-inline: 0;
     }
 }
 
@@ -144,7 +179,7 @@ aside {
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    gap: var(--space-away);
+    gap: var(--space-near);
 
     max-inline-size: min(var(--size-content-3), 100%);
     min-block-size: 0;
@@ -156,10 +191,6 @@ aside {
     box-shadow: var(--shadow-5);
     border: var(--border-size-1) solid var(--surface-2);
 
-    padding-block-start: var(--padding-edge);
-    padding-block-end: var(--padding-edge);
-    /* padding-block-end: env(safe-area-inset-bottom, 16px); */
-
     transition: 0.3s ease;
     will-change: transform;
     transform: translateY(0%);
@@ -169,6 +200,9 @@ aside {
         border: 0;
         padding-block-start: 0;
         border-radius: 0;
+
+        padding-inline-end: var(--space-away);
+        padding-block-end: var(--space-away);
     }
 
     &:not(.isOpen) {
@@ -189,47 +223,44 @@ aside {
 }
 
 .tabs {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 100%;
     block-size: 100%;
     scroll-padding-inline-start: 0;
-
-    @media (--lg-n-above) {
-        grid-auto-flow: row;
-        gap: var(--space-away);
-        scroll-behavior: smooth;
-
-        overflow-x: hidden;
-        overflow-y: scroll;
-        overscroll-behavior-inline: contain;
-        scroll-snap-type: block mandatory;
-        scroll-padding-block: var(--gap);
-    }
+    scroll-behavior: smooth;
 }
 
 .tab {
     inline-size: 100%;
     padding-inline: var(--padding-edge);
+    padding-block: var(--space-away);
+
+    @media (--lg-n-above) {
+        padding-block-start: 0;
+        padding-inline: 0;
+    }
+
     scroll-snap-align: start;
     overscroll-behavior-y: contain;
 
     & h2 {
-        display: none;
+        margin-block-end: var(--space-near);
         font-weight: var(--font-weight-6);
         font-size: var(--font-size-4);
-        
-        @media (--lg-n-above) {
-            display: inline-block;
-            margin-block-end: var(--space-away);
-        }
     }
 }
 
 nav {
+    background-color: var(--surface-1);
     display: flex;
+    align-items: center;
     gap: var(--space-away);
+    /* padding-block-end: env(safe-area-inset-bottom, 16px); */
     padding-inline: var(--padding-edge);
+    padding-block-end: var(--padding-edge);
+
+    @media (--lg-n-above) {
+        padding-inline: 0;
+        padding-block-end: 0;
+    }
 
     & a {
         display: grid;
@@ -252,8 +283,12 @@ output {
     grid-area: output;
     inline-size: 100%;
     padding-inline: var(--padding-edge);
-    padding-block-end: var(--padding-edge);
+    padding-block-end: var(--space-away);
     /* padding-block-end: env(safe-area-inset-bottom, 16px); */
+
+    @media (--lg-n-above) {
+        padding-inline: 0;
+    }
 
     & ul.score-board {
         background-color: var(--surface-1);

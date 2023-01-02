@@ -98,8 +98,8 @@ svg {
 }
 
 main {
-    min-block-size: 100vh;
     block-size: 100vh;
+    block-size: 100svh;
     overflow: hidden;
     display: grid;
     grid: "header" auto
@@ -123,7 +123,7 @@ main {
 
 header {
     grid-area: header;
-    padding: var(--space-near);
+    padding: var(--space-away);
     padding-block-end: 0;
 
     @media (--lg-n-above) {

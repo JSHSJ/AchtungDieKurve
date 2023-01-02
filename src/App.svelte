@@ -119,7 +119,7 @@
                     class="toggle"
                     on:click="{toggleMenu}"
                 >
-                    Toggle
+                    Menu
                 </button>
             </li>
         </ul>
@@ -213,7 +213,7 @@
                 on:click="{toggleMenu}"
                 tabindex="0"
             >
-                Toggle
+                Close
             </button>
         </nav>
     </aside>

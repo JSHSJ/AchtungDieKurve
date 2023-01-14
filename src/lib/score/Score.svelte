@@ -1,6 +1,6 @@
 <script lang="ts">
     const radius: number = 50;
-    const strokeWidth: number = 5;
+    let strokeWidth: number = 5;
     const size: number = radius * 2;
 
     export let score: number = 0;
@@ -12,7 +12,7 @@
         isAnimating = true;
         setTimeout(() => {
             isAnimating = false;
-        }, 200);
+        }, 250);
     };
 
     $: score && playAnimation();
@@ -20,8 +20,12 @@
 
 <div>
     <svg viewBox="{`0 0 ${size} ${size}`}" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle r="{radius - strokeWidth / 2}" cx="{size / 2}" cy="{size / 2}" id="inactive"
-        ></circle>
+        <circle
+            r="{radius - strokeWidth / 2}"
+            cx="{size / 2}"
+            cy="{size / 2}"
+            style:stroke-width="{`${strokeWidth}px`}"
+            style:stroke="{isAnimating ? 'var(--surface-3)' : 'var(--surface-2)'}"></circle>
         <circle
             r="{radius - strokeWidth / 2}"
             cx="{size / 2}"
@@ -76,10 +80,6 @@
 
     circle {
         fill: transparent;
-    }
-
-    #inactive {
-        stroke: var(--surface-2);
     }
 
     #active {

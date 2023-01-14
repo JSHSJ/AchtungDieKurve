@@ -1,11 +1,21 @@
 <script lang="ts">
-    const radius: number = 6;
-    const strokeWidth: number = 1;
+    const radius: number = 50;
+    const strokeWidth: number = 5;
     const size: number = radius * 2;
 
     export let score: number = 0;
     export let totalScore: number;
     export let color: string;
+
+    let isAnimating: boolean = false;
+    const playAnimation = () => {
+        isAnimating = true;
+        setTimeout(() => {
+            isAnimating = false;
+        }, 200);
+    };
+
+    $: score && playAnimation();
 </script>
 
 <div>
@@ -24,6 +34,22 @@
         ${2 * Math.PI * radius * ((totalScore - score) / totalScore)}
       `}"
             stroke-dashoffset="{0.25 * (2 * Math.PI * radius)}"></circle>
+        <g
+            stroke-width="3"
+            style:stroke="{color}"
+            class="animation-group"
+            class:-active="{isAnimating}"
+            class:-inactive="{!isAnimating}"
+        >
+            <path d="M70 30.6066L80.6066 20"></path>
+            <path d="M30.6066 70L20 80.6066"></path>
+            <path d="M29.6066 29.6066L19 19"></path>
+            <path d="M70 70L80.6066 80.6066"></path>
+            <path d="M50 15V0"></path>
+            <path d="M85 50H100"></path>
+            <path d="M50 85V100"></path>
+            <path d="M15 50H0"></path>
+        </g>
     </svg>
     <span id="label">{score}</span>
 </div>
@@ -62,5 +88,33 @@
         stroke-miterlimit: 10;
         stroke-linejoin: round;
         transition: all 500ms ease-in-out;
+    }
+
+    .animation-group.-inactive {
+        opacity: 0;
+    }
+
+    .animation-group.-active path {
+        --arrayMax: 25;
+        stroke-dasharray: var(--arrayMax);
+        stroke-dashoffset: 25;
+        opacity: 1;
+        animation: dash 250ms var(--ease-elastic-3) forwards;
+    }
+
+    @keyframes dash {
+        0% {
+            stroke-dashoffset: var(--arrayMax);
+            opacity: 1;
+        }
+        90% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+        }
+
+        100% {
+            stroke-dashoffset: 0;
+            opacity: 0;
+        }
     }
 </style>

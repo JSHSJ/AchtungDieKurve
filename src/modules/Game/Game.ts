@@ -147,14 +147,14 @@ export class Game extends EventEmitter<TGameEvent> {
     }
 
     private handleRoundOver(ranking: Player[]) {
-        // Correct score based on (NumberOfPlayers - PlayersRank + 1) + NumberOfPlayersKilled
+        // Correct score based on (NumberOfPlayers - PlayersRank) + NumberOfPlayersKilled
         if (ranking.length === 0) {
             return;
         }
 
         if (config.scoreUseRanking) {
             ranking.forEach((player, index) => {
-                this.score[player.id] += this.players.length - index;
+                this.score[player.id] += this.players.length - index - 1;
             });
         } else {
             this.score[ranking[0].id] += this.players.length - 1;

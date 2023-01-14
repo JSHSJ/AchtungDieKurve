@@ -103,7 +103,6 @@ export class Game extends EventEmitter<TGameEvent> {
     private handleRoundEvent(event: RoundEvent) {
         if (event.type === RoundEventTypes.ROUND_OVER) {
             this.handleRoundOver(event.ranking);
-            this.gameState = GameState.ROUND_OVER;
         }
         // If a player collides with a another player, credit the "killer" with a point and kill the player
         if (event.type === RoundEventTypes.PLAYER_COLLISION) {
@@ -165,7 +164,9 @@ export class Game extends EventEmitter<TGameEvent> {
             score: this.score,
         });
         this.canvas.drawRoundOver(ranking[0]);
-        this.checkGameOver();
+        if (!this.checkGameOver()) {
+            this.gameState = GameState.ROUND_OVER;
+        }
     }
 
     private handleGameOver(winner: Player) {

@@ -9,7 +9,7 @@
 
     /** Selects the text inside a text node when the node is focused */
     const clearOnFocus = (node: HTMLInputElement) => {
-        const handleFocus = (event) => {
+        const handleFocus = () => {
             displayValue = '<Press a key...>';
         };
 
@@ -24,14 +24,21 @@
 
     const blurOnInput = (node: HTMLInputElement) => {
         const handleKey = (event) => {
+            if (event.key === 'Tab') {
+                node.blur();
+                displayValue = mapDisplayKey(value);
+                return;
+            }
+
             event.preventDefault();
+
             if (event.key === 'Escape') {
                 node.blur();
                 displayValue = mapDisplayKey(value);
                 return;
             }
 
-            if (disallowedKeys.has(event.key)) {
+            if (disallowedKeys.has(event.key) || event.shiftKey) {
                 // TODO: display message
                 return;
             }
@@ -54,10 +61,10 @@
 
 <input
     type="text"
-    name={name}
-    id={id}
+    name="{name}"
+    id="{id}"
     required
-    bind:value={displayValue}
+    bind:value="{displayValue}"
     use:blurOnInput
     use:clearOnFocus
 />

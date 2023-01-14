@@ -1,4 +1,4 @@
-export const disallowedKeys = new Set([' ', 'Enter', 'Tab']);
+export const disallowedKeys = new Set([' ', 'Enter']);
 
 export const mapDisplayKey = (key: string) => {
     switch (key) {

@@ -30,6 +30,7 @@
         "vite-plugin-pwa": "^0.14.0"
     },
     "dependencies": {
+        "@jshsj/with-arrow-controls": "^0.0.2",
         "open-props": "^1.5.1"
     }
 }

@@ -5,8 +5,11 @@
     import { Routes } from '../routing/routes';
     import { navigateTo } from '../../stores/router';
 
+    let initialButton;
+
     onMount(() => {
         withArrowControls();
+        initialButton.focus();
     });
 </script>
 
@@ -15,9 +18,12 @@
         <Logo />
     </div>
     <div data-with-arrowcontrols>
-        <button on:click="{() => navigateTo(Routes.PLAYERS)}">Start Game</button>
+        <button bind:this="{initialButton}" on:click="{() => navigateTo(Routes.PLAYERS)}"
+            >New Game</button
+        >
         <button on:click="{() => navigateTo(Routes.OPTIONS)}">Options</button>
-        <button>How to Play</button>
+        <button on:click="{() => navigateTo(Routes.HOW_TO_PLAY)}">How to Play</button>
+        <button on:click="{() => navigateTo(Routes.CREDITS)}">Credits</button>
     </div>
 </section>
 

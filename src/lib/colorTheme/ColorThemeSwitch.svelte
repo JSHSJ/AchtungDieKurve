@@ -1,7 +1,5 @@
 <script lang="ts">
     import { ColorTheme, colorThemeStore } from '../../stores/colorTheme';
-
-    export let tabIndex: number;
 </script>
 
 <div class="input-wrapper">
@@ -9,15 +7,9 @@
         <span>Color Scheme</span>
         <span class="input-description">Switch between light, dark and adaptive</span>
     </label>
-    <select
-        bind:value="{$colorThemeStore}"
-        id="color-theme"
-        name="color-theme"
-        tabindex="{tabIndex}"
-    >
+    <select bind:value="{$colorThemeStore}" id="color-theme" name="color-theme">
         {#each Object.values(ColorTheme) as theme}
             <option value="{theme}">{theme}</option>
         {/each}
     </select>
 </div>
-<div class="canvas-color-helper"></div>

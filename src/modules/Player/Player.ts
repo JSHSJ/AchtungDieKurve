@@ -68,7 +68,7 @@ export class Player {
         if (keys?.has(this.controls.right)) {
             this.directionControl =
                 this.directionControl === 0
-                    ? calculateFullTurnRadius(config.turningRadius)
+                    ? calculateFullTurnRadius(config.turningRadius) - 1
                     : this.directionControl - 1;
             this.updateDirection();
         }
